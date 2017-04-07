@@ -21,6 +21,12 @@ class DirectoryModel {
     var subjectData = [String: Any]()
     var trialList = [[String: Any]]()
     
+    var bodyCamFilePath: URL?
+    var faceCamFilePath: URL?
+    var E4FilePath: URL?
+    var bioECGFilePath: URL?
+    var bioGeneralFilePath: URL?
+    
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
         do {
@@ -42,7 +48,7 @@ class DirectoryModel {
     // starts when demographic data is submitted
     func startBodySession(demographicData: [String:Any], overwriteExistingSession overwrite: Bool = false) -> (success: Bool, error: String)? {
         self.subjectData["phoneMode"] = BODY
-        self.subjectData["subjectID"] = demographicData["subjectID"] as! Int?
+        self.subjectData["subjectID"] = Int(demographicData["subjectID"] as! String)
         self.subjectData["demographicData"] = demographicData
         return createSubjectDirectory(directoryName: String(describing: subjectData["subjectID"]!) + String(describing:subjectData["phoneMode"]!), overwriteExistingSession: overwrite)
     }
@@ -79,21 +85,16 @@ class DirectoryModel {
             }
             
             self.subjectDirectoryURL = URL.init(fileURLWithPath: newURL.path)
-            
-//            //debugging stuff
-//            let directoryCreated = FileManager.default.fileExists(atPath: (newURL.path))
-//            print("Directory: \(subjectDirectoryURL) was created: \(directoryCreated)")
-            
             return nil
     }
     
     // Saving data from each round (sevens, sitting, standing, etc.) to the trial list
     func saveFaceTrailRound(trialPosition type: String, trialStartTime startTime: Date, trailEndTime endTime: Date) {
-        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "type": type, "faceCamFilePath": "TBD", "ECGFilePath": "FILED", "bioGeneralFilePath": "stuff"] as [String : Any]
+        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "positionType": type, "faceCamFilePath": "TBD", "bioECGFilePath": "FILED", "bioGeneralFilePath": "stuff"] as [String : Any]
         self.trialList.append(tempDictionary)
     }
     func saveBodyTrialRound(manualEntryData manualData: [String:Any], trialPosition type: String, trialStartTime startTime: Date, trailEndTime endTime: Date) {
-        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "type": type, "bodyCamFilePath": "TBD", "E4Filepath": "filePath of e4", "manualEntry": manualData] as [String : Any]
+        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "positionType": type, "bodyCamFilePath": "TBD", "E4FilePath": "filePath of e4", "manualEntry": manualData] as [String : Any]
         self.trialList.append(tempDictionary)
     }
     
@@ -101,13 +102,18 @@ class DirectoryModel {
     func finishSubjectSession() {
         subjectData["trailList"] = trialList
         let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
-//        NSKeyedArchiver.archiveRootObject(subjectData, toFile: filePath.path)
         do {
-            let json = try JSONSerialization.data(withJSONObject: subjectData, options: [])
+            let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
             FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
-            let success = FileManager.default.fileExists(atPath: (filePath.path))
-            let content = try String(contentsOf: filePath)
-            print("It was a success \(success) file: \(content)")
+            
+            self.bioECGFilePath = nil
+            self.bioGeneralFilePath = nil
+            self.bodyCamFilePath = nil
+            self.faceCamFilePath = nil
+            self.E4FilePath = nil
+            self.subjectDirectoryURL = nil
+            self.subjectData = [String: Any]()
+            self.trialList = [[String: Any]]()
         } catch let error as NSError {
             print(error.localizedDescription)
         }

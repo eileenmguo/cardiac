@@ -17,6 +17,7 @@
 		5ECC83601E81BE83009C2A3E /* BodyCamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECC835F1E81BE83009C2A3E /* BodyCamViewController.swift */; };
 		5ECC83621E81BE97009C2A3E /* FaceCamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECC83611E81BE97009C2A3E /* FaceCamViewController.swift */; };
 		5ECC83641E81C40B009C2A3E /* DemSurveyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECC83631E81C40B009C2A3E /* DemSurveyViewController.swift */; };
+		5ED3FB211E97DD2600E39132 /* ManualInputDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED3FB201E97DD2600E39132 /* ManualInputDataViewController.swift */; };
 		5EE2B8241E8C1F6F0022CFDF /* DirectoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		5ECC835F1E81BE83009C2A3E /* BodyCamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyCamViewController.swift; sourceTree = "<group>"; };
 		5ECC83611E81BE97009C2A3E /* FaceCamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceCamViewController.swift; sourceTree = "<group>"; };
 		5ECC83631E81C40B009C2A3E /* DemSurveyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemSurveyViewController.swift; sourceTree = "<group>"; };
+		5ED3FB201E97DD2600E39132 /* ManualInputDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualInputDataViewController.swift; sourceTree = "<group>"; };
 		5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				5E5A476E1E805B99001D422B /* Main.storyboard */,
 				5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */,
 				5ECC83631E81C40B009C2A3E /* DemSurveyViewController.swift */,
+				5ED3FB201E97DD2600E39132 /* ManualInputDataViewController.swift */,
 				5E5A47711E805B99001D422B /* Assets.xcassets */,
 				5E5A47731E805B99001D422B /* LaunchScreen.storyboard */,
 				5E5A47761E805B99001D422B /* Info.plist */,
@@ -273,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5ECC83601E81BE83009C2A3E /* BodyCamViewController.swift in Sources */,
+				5ED3FB211E97DD2600E39132 /* ManualInputDataViewController.swift in Sources */,
 				5ECC83621E81BE97009C2A3E /* FaceCamViewController.swift in Sources */,
 				5ECC83641E81C40B009C2A3E /* DemSurveyViewController.swift in Sources */,
 				5EE2B8241E8C1F6F0022CFDF /* DirectoryModel.swift in Sources */,

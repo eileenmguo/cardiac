@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
-class DemSurveyViewController: UIViewController {
+class DemSurveyViewController: UIViewController, UITextFieldDelegate {
+    
+    let directoryModel = DirectoryModel.sharedInstance
     
     @IBOutlet weak var StudyID: UITextField!
     @IBOutlet weak var Gender: UISegmentedControl!
@@ -46,6 +48,9 @@ class DemSurveyViewController: UIViewController {
     @IBOutlet weak var Smoke: UISegmentedControl!
     @IBOutlet weak var Alcohol: UISegmentedControl!
     
+    @IBAction func screenTapped(_ sender: Any) {
+        UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,5 +62,31 @@ class DemSurveyViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func submitSurvey(_ sender: Any) {
+        let exercizes = ["bicycle": Bicycle.isOn, "calisthenics": Calisthenics.isOn, "jog": Jog.isOn, "liftWeights": LiftWeigts.isOn, "swim": Swim.isOn, "walk": Walk.isOn, "otherExercise": OtherExercise.isOn, "otherExerciseDescription": OtherExerciseDescription.text!] as [String : Any]
+        let race = ["black": Black.isOn, "americanIndian": AmericanIndian.isOn, "nativeHawaiian": NativeHawaiian.isOn, "white": White.isOn, "asian": Asian.isOn, "otherRace": OtherRace.isOn, "otherRaceDescription": OtherRaceDescription.text!] as [String : Any]
+        let demographicData = [
+            "subjectID": StudyID.text!,
+            "gender": Gender.titleForSegment(at: Gender.selectedSegmentIndex)!,
+            "age": Age.text!,
+            "height": HeightFt.text! + " ft " + HeightIn.text! + " in",
+            "weight": Weight.text!,
+            "dominantSide": DominantSide.titleForSegment(at: DominantSide.selectedSegmentIndex)!,
+            "heartCondition": HeartCondition.isOn,
+            "lungCondition": LungCondition.isOn,
+            "medication": Medication.isOn,
+            "activityAmount": Activity.titleForSegment(at: Activity.selectedSegmentIndex)!,
+            "activities": exercizes,
+            "ethnicity": Ethnicity.titleForSegment(at: Ethnicity.selectedSegmentIndex)!,
+            "race": race,
+            "smoking": Smoke.titleForSegment(at: Smoke.selectedSegmentIndex)!,
+            "alcoholConsumption": Alcohol.titleForSegment(at: Alcohol.selectedSegmentIndex)!
+        ] as [String : Any]
+        print(demographicData)
+        let failed = directoryModel.startBodySession(demographicData: demographicData)
+        if failed != nil {
+            print(failed!.error)
+        }
+    }
     
 }

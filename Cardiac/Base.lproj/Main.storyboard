@@ -19,18 +19,18 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R40-fJ-ibW">
-                                <rect key="frame" x="300" y="250" width="67" height="30"/>
+                                <rect key="frame" x="154" y="250" width="67" height="30"/>
                                 <state key="normal" title="BodyCam"/>
                                 <connections>
                                     <segue destination="Sci-em-XM1" kind="show" id="KCc-rq-QGb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0aw-Od-Uan">
-                                <rect key="frame" x="301" y="347" width="64" height="30"/>
+                                <rect key="frame" x="155" y="347" width="64" height="30"/>
                                 <state key="normal" title="FaceCam"/>
                                 <connections>
                                     <segue destination="O3h-YL-h6Q" kind="show" id="cjA-jU-9UG"/>
@@ -566,10 +566,12 @@
                                         <rect key="frame" x="20" y="1650" width="345" height="30"/>
                                         <state key="normal" title="Submit Survey"/>
                                         <connections>
+                                            <action selector="submitSurvey:" destination="Sci-em-XM1" eventType="touchUpInside" id="sWv-WF-d80"/>
                                             <segue destination="zC2-T4-SkB" kind="show" id="NiN-4w-OK0"/>
                                         </connections>
                                     </button>
                                 </subviews>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="3Jn-Me-0XK" firstAttribute="top" secondItem="JMk-4U-3jK" secondAttribute="bottom" constant="15" id="01A-Zm-BUz"/>
                                     <constraint firstItem="So2-GO-Oqk" firstAttribute="top" secondItem="Vaz-qo-Iv8" secondAttribute="bottom" constant="18" id="06G-oq-dim"/>
@@ -752,6 +754,9 @@
                                     <constraint firstItem="ckw-nv-hdp" firstAttribute="top" secondItem="JMk-4U-3jK" secondAttribute="bottom" constant="10" id="ydE-jK-SXH"/>
                                     <constraint firstItem="OHo-MM-MEF" firstAttribute="top" secondItem="bAC-Jd-bFq" secondAttribute="bottom" constant="16" id="zOH-Cy-1VF"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Fr6-0i-anN" appends="YES" id="vaK-R4-rad"/>
+                                </connections>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -796,6 +801,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bBR-pl-xOQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Fr6-0i-anN">
+                    <connections>
+                        <action selector="screenTapped:" destination="Sci-em-XM1" id="xJk-6q-Rpq"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="377" y="1366"/>
         </scene>
@@ -880,7 +890,7 @@
         <!--BodyCamDataInput-->
         <scene sceneID="mU8-wA-ZaL">
             <objects>
-                <viewController title="BodyCamDataInput" id="2kc-d5-06H" sceneMemberID="viewController">
+                <viewController title="BodyCamDataInput" id="2kc-d5-06H" customClass="ManualInputDataViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="GRs-FO-cJ5"/>
                         <viewControllerLayoutGuide type="bottom" id="kjc-i0-mBJ"/>
@@ -1022,8 +1032,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Spignomsjakl" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLh-DF-xkm">
-                                <rect key="frame" x="16" y="361" width="102" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sphigmomanometer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLh-DF-xkm">
+                                <rect key="frame" x="16" y="361" width="156" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1032,9 +1042,13 @@
                                 <rect key="frame" x="19" y="617" width="340" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Finish"/>
+                                <connections>
+                                    <action selector="submitTrialRound:" destination="2kc-d5-06H" eventType="touchUpInside" id="tSJ-uZ-jF7"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="C4a-QG-tke" firstAttribute="top" secondItem="Bs3-Co-ect" secondAttribute="top" id="0Jx-Au-gIV"/>
                             <constraint firstItem="rxs-WZ-c8I" firstAttribute="top" secondItem="XLX-Fm-s1P" secondAttribute="bottom" constant="-25" id="1Nc-d2-FFy"/>
@@ -1072,9 +1086,27 @@
                             <constraint firstItem="NCk-fS-5P3" firstAttribute="top" secondItem="XNO-iH-BaT" secondAttribute="bottom" constant="8" id="oms-QE-pg5"/>
                             <constraint firstItem="Bs3-Co-ect" firstAttribute="bottom" secondItem="N3c-ZK-8vd" secondAttribute="bottom" id="xVt-39-gif"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Ph1-CX-mo9" appends="YES" id="2Ui-qa-hg5"/>
+                        </connections>
                     </view>
+                    <connections>
+                        <outlet property="CardioBuddyBPM" destination="XLX-Fm-s1P" id="HwV-RH-48y"/>
+                        <outlet property="PulseOxBPM" destination="M4t-Yu-rD8" id="IsD-V4-T3U"/>
+                        <outlet property="PulseOxSp02" destination="M6E-NE-b2k" id="Pqq-ef-W31"/>
+                        <outlet property="bloodPressureGT" destination="tRC-9W-JG8" id="uXD-s2-bhp"/>
+                        <outlet property="iCareBPM" destination="XNO-iH-BaT" id="t5v-c6-KY2"/>
+                        <outlet property="iCareBloodPressure" destination="HwA-6v-GZ3" id="tKV-bS-EF9"/>
+                        <outlet property="iCareBloodViscosity" destination="qUl-Ev-x0e" id="kDs-ru-XiX"/>
+                        <outlet property="iCarePulseOx" destination="NCk-fS-5P3" id="4Zd-3V-sds"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ypk-5w-dah" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Ph1-CX-mo9">
+                    <connections>
+                        <action selector="screenTapped:" destination="2kc-d5-06H" id="VEF-0x-MaK"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1116" y="1717"/>
         </scene>
@@ -1172,6 +1204,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="mJf-u9-lLb"/>
+        <segue reference="XAI-vM-3s5"/>
     </inferredMetricsTieBreakers>
 </document>
