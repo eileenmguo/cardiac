@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1421" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E192b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,18 +19,18 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R40-fJ-ibW">
-                                <rect key="frame" x="154" y="250" width="67" height="30"/>
+                                <rect key="frame" x="300" y="250" width="67" height="30"/>
                                 <state key="normal" title="BodyCam"/>
                                 <connections>
                                     <segue destination="Sci-em-XM1" kind="show" id="KCc-rq-QGb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0aw-Od-Uan">
-                                <rect key="frame" x="155" y="347" width="64" height="30"/>
+                                <rect key="frame" x="301" y="347" width="64" height="30"/>
                                 <state key="normal" title="FaceCam"/>
                                 <connections>
                                     <segue destination="O3h-YL-h6Q" kind="show" id="cjA-jU-9UG"/>
@@ -95,7 +95,7 @@
         <!--FaceCamDataCollection-->
         <scene sceneID="290-On-Gd4">
             <objects>
-                <viewController title="FaceCamDataCollection" id="dtf-ge-hlU" customClass="FaceCamViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="FaceCamDataCollection" id="dtf-ge-hlU" customClass="VideoViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8S3-wZ-iiX"/>
                         <viewControllerLayoutGuide type="bottom" id="a49-pl-k54"/>
@@ -136,6 +136,29 @@
                                     <segue destination="Ooq-1Z-LWE" kind="presentation" id="bTv-Qq-GU6"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nu-YL-2Fw">
+                                <rect key="frame" x="20" y="25" width="627" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aQ2-ST-DVU">
+                                <rect key="frame" x="20" y="325" width="49" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Record"/>
+                                <connections>
+                                    <action selector="pushRecord:" destination="dtf-ge-hlU" eventType="touchUpInside" id="kKZ-iL-nez"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rHF-O7-pD8">
+                                <rect key="frame" x="615" y="325" width="32" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="pushStop:" destination="dtf-ge-hlU" eventType="touchUpInside" id="7Vc-el-66V"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -163,10 +186,15 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="667" height="375"/>
+                    <connections>
+                        <outlet property="recordButton" destination="aQ2-ST-DVU" id="hVy-d0-ZbP"/>
+                        <outlet property="stopButton" destination="rHF-O7-pD8" id="Tva-iL-LsK"/>
+                        <outlet property="timerLabel" destination="2nu-YL-2Fw" id="NZS-IT-uJb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lgw-js-YGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-540" y="1247"/>
+            <point key="canvasLocation" x="-540" y="1245.4272863568217"/>
         </scene>
         <!--BodyCamDemSurvey-->
         <scene sceneID="6SR-hK-nTz">
@@ -812,7 +840,7 @@
         <!--BodyCamDataCollection-->
         <scene sceneID="DYf-S3-Xk3">
             <objects>
-                <viewController title="BodyCamDataCollection" id="zC2-T4-SkB" customClass="BodyCamViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="BodyCamDataCollection" id="zC2-T4-SkB" customClass="VideoViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UTv-ZV-bCf"/>
                         <viewControllerLayoutGuide type="bottom" id="KRe-Yg-A93"/>
@@ -857,13 +885,36 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEb-UN-CLs">
-                                <rect key="frame" x="19" y="617" width="340" height="30"/>
+                                <rect key="frame" x="121" y="617" width="132" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Start Sync"/>
                                 <connections>
                                     <segue destination="2kc-d5-06H" kind="presentation" id="KMB-FI-xlB"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mq4-DI-aSj">
+                                <rect key="frame" x="19" y="617" width="49" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Record"/>
+                                <connections>
+                                    <action selector="pushRecord:" destination="zC2-T4-SkB" eventType="touchUpInside" id="2Hv-ev-1DL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xp5-SW-PSh">
+                                <rect key="frame" x="327" y="617" width="32" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="pushStop:" destination="zC2-T4-SkB" eventType="touchUpInside" id="Ub1-Kc-Kar"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T52-YD-gEY">
+                                <rect key="frame" x="16" y="32" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -882,10 +933,15 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
+                    <connections>
+                        <outlet property="recordButton" destination="Mq4-DI-aSj" id="tci-I4-ZRI"/>
+                        <outlet property="stopButton" destination="xp5-SW-PSh" id="GeO-BZ-Ya8"/>
+                        <outlet property="timerLabel" destination="T52-YD-gEY" id="xj2-da-cuM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6KB-Pw-O65" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1116" y="1050"/>
+            <point key="canvasLocation" x="1116" y="1049.3253373313344"/>
         </scene>
         <!--BodyCamDataInput-->
         <scene sceneID="mU8-wA-ZaL">
@@ -1204,6 +1260,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="XAI-vM-3s5"/>
+        <segue reference="wwQ-5s-aAx"/>
     </inferredMetricsTieBreakers>
 </document>
