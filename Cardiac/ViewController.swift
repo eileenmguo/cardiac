@@ -14,11 +14,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        directoryModel.startFaceSession(subjectID: 1, overwriteExistingSession: true)
-        directoryModel.saveFaceTrailRound(trialPosition: "sitting", trialStartTime: Date(), trailEndTime: Date())
-        directoryModel.saveFaceTrailRound(trialPosition: "standing", trialStartTime: Date(), trailEndTime: Date())
-        directoryModel.finishSubjectSession()
     }
 
     override func didReceiveMemoryWarning() {

@@ -9,20 +9,22 @@
 import UIKit
 
 class DirectoryModel {
-    let FACE = "faceCam"
-    let BODY = "bodyCam"
+    let FACE: String = "faceCam"
+    let BODY: String = "bodyCam"
+    let POSITIONS: [String] = ["supine", "sitting", "sevens", "standing"]
     
     static let sharedInstance = DirectoryModel()
-    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let rootDirectoryURL:URL
-    
+    let documentsURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let rootDirectoryURL: URL
     var subjectDirectoryURL: URL?
     
     var subjectData = [String: Any]()
     var trialList = [[String: Any]]()
     
-    var bodyCamFilePath: URL?
-    var faceCamFilePath: URL?
+    var trialStartTime: Date = Date() //TEMP What do we want these to be exactly?
+    var trialEndTime: Date = Date() //TEMP
+    
+    var videoFilePath: URL?
     var E4FilePath: URL?
     var bioECGFilePath: URL?
     var bioGeneralFilePath: URL?
@@ -34,8 +36,6 @@ class DirectoryModel {
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil, options: [])
             if directoryContents.count == 0 {
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: false, attributes: nil)
-                
-            //TEMP
             } else {
                 try FileManager.default.removeItem(at: rootDirectoryURL)
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: false, attributes: nil)
@@ -54,7 +54,7 @@ class DirectoryModel {
     }
     
     //Starts when subjectID is submitted
-    func startFaceSession(subjectID: Int, overwriteExistingSession overwrite: Bool = false) ->
+    func startFaceSession(subjectID: String, overwriteExistingSession overwrite: Bool = false) ->
         (success: Bool, error: String)? {
         self.subjectData["phoneMode"] = FACE
         self.subjectData["subjectID"] = subjectID
@@ -89,12 +89,26 @@ class DirectoryModel {
     }
     
     // Saving data from each round (sevens, sitting, standing, etc.) to the trial list
-    func saveFaceTrailRound(trialPosition type: String, trialStartTime startTime: Date, trailEndTime endTime: Date) {
-        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "positionType": type, "faceCamFilePath": "TBD", "bioECGFilePath": "FILED", "bioGeneralFilePath": "stuff"] as [String : Any]
+    func saveFaceTrailRound() {
+        let tempDictionary = [
+            "startTime": trialStartTime.description,
+            "endTime": trialEndTime.description,
+            "positionType": POSITIONS[trialList.count],
+            "faceCamFilePath": videoFilePath!,
+            "bioECGFilePath": bioECGFilePath ?? "",
+            "bioGeneralFilePath": bioGeneralFilePath ?? ""
+        ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
-    func saveBodyTrialRound(manualEntryData manualData: [String:Any], trialPosition type: String, trialStartTime startTime: Date, trailEndTime endTime: Date) {
-        let tempDictionary = ["startTime": startTime.description, "endTime": endTime.description, "positionType": type, "bodyCamFilePath": "TBD", "E4FilePath": "filePath of e4", "manualEntry": manualData] as [String : Any]
+    func saveBodyTrialRound(manualEntryData manualData: [String:Any]) {
+        let tempDictionary = [
+            "startTime": trialStartTime.description,
+            "endTime": trialEndTime.description,
+            "positionType": POSITIONS[trialList.count],
+            "bodyCamFilePath": videoFilePath!,
+            "E4FilePath": E4FilePath ?? "",
+            "manualEntry": manualData
+        ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
     
@@ -103,13 +117,13 @@ class DirectoryModel {
         subjectData["trailList"] = trialList
         let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
         do {
+            print(subjectData)
             let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
             FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
             
             self.bioECGFilePath = nil
             self.bioGeneralFilePath = nil
-            self.bodyCamFilePath = nil
-            self.faceCamFilePath = nil
+            self.videoFilePath = nil
             self.E4FilePath = nil
             self.subjectDirectoryURL = nil
             self.subjectData = [String: Any]()
@@ -119,15 +133,11 @@ class DirectoryModel {
         }
     }
     
-    func saveFaceVideo(trialPosition type: String) {
+    func generateVideoFileURL() -> (URL){
+        let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + String(describing: subjectData["phoneMode"]!) + ".mov"
+        self.videoFilePath = URL.init(fileURLWithPath: filePath, relativeTo: subjectDirectoryURL)
+        return videoFilePath!
     }
-    func saveBodyVideo() {
-    }
-    func saveE4() {
-    }
-    func saveBioECG() {
-    }
-    func saveBioGeneral() {
-    }
+
 }
 

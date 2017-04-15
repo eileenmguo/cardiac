@@ -11,6 +11,8 @@ import AVFoundation
 
 class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
+    let directoryModel = DirectoryModel.sharedInstance
+    
     let WHITE_BALANCE_TEMP: Float = 4000.0
     let WHITE_BALANCE_TINT: Float = 0.0
     
@@ -20,6 +22,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var positionLabel: UILabel!
     
     lazy var cameraSession: AVCaptureSession = {
         let s = AVCaptureSession()
@@ -45,6 +48,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         // Do any additional setup after loading the view, typically from a nib.
         
         updateButtons(isRecording: false)
+        
+        self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         
         setupCameraSession()
     }
@@ -97,6 +102,11 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
             
             // Set camera to highest available framerate
             configureCameraForHighestFrameRate(device: videoCaptureDevice)
+            
+            if directoryModel.subjectData["phoneMode"] as! String == directoryModel.BODY {
+                configureTorch(device: videoCaptureDevice, torchLevel: 0.7)
+            }
+            
             
             cameraSession.commitConfiguration()
         }
@@ -160,6 +170,19 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         }
     }
     
+    func configureTorch(device: AVCaptureDevice, torchLevel: Float) {
+        // Configure device
+        do{
+            try device.lockForConfiguration()
+            
+            try device.setTorchModeOnWithLevel(torchLevel)
+            
+            device.unlockForConfiguration()
+        } catch {
+            print("Could not lock device to configure torch.")
+        }
+    }
+    
     func setGainsRange(gains: AVCaptureWhiteBalanceGains, device: AVCaptureDevice) -> AVCaptureWhiteBalanceGains {
         var ng = gains
         
@@ -176,10 +199,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     func beginRecording() {
         // Save file in Documents directory
-        let fileManager = FileManager.default
-        let documentsDirectory = try! fileManager.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        let fileName = Date().timeIntervalSince1970.description
-        let fileURL = documentsDirectory.appendingPathComponent(fileName + ".mov")
+        let fileURL = directoryModel.generateVideoFileURL()
         
         fileOutput.startRecording(toOutputFileURL: fileURL, recordingDelegate: self)
     }
@@ -189,6 +209,12 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     }
     
     // MARK: - Actions
+    @IBAction func submitVideo(_ sender: Any) {
+        if directoryModel.subjectData["phoneMode"] as! String == directoryModel.BODY {
+            let videoCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
+            configureTorch(device: videoCaptureDevice, torchLevel: 0.0)
+        }
+    }
     
     @IBAction func pushRecord(_ sender: Any) {
         beginRecording()
