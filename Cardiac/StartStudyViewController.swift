@@ -71,7 +71,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         if failed != nil {
             print(failed!.error)
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCamConnecting")
             self.present(controller!, animated: true, completion: nil)
         }
     }
@@ -101,7 +101,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         if failed != nil {
             print(failed!.error)
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCamConnecting")
             self.present(controller!, animated: true, completion: nil)
         }
     }

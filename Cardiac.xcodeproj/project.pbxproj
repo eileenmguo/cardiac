@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E06D4B71EA6BC3400DF182B /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E06D4B61EA6BC3400DF182B /* ConnectViewController.swift */; };
+		5E06D4B91EA6CABD00DF182B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E06D4B81EA6CABD00DF182B /* ConnectivityManager.swift */; };
 		5E5A476B1E805B99001D422B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5A476A1E805B99001D422B /* AppDelegate.swift */; };
 		5E5A476D1E805B99001D422B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5A476C1E805B99001D422B /* ViewController.swift */; };
 		5E5A47701E805B99001D422B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E5A476E1E805B99001D422B /* Main.storyboard */; };
@@ -38,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5E06D4B61EA6BC3400DF182B /* ConnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
+		5E06D4B81EA6CABD00DF182B /* ConnectivityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		5E5A47671E805B99001D422B /* Cardiac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cardiac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E5A476A1E805B99001D422B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5E5A476C1E805B99001D422B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +115,8 @@
 				5E5A476E1E805B99001D422B /* Main.storyboard */,
 				5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */,
 				5ECC83631E81C40B009C2A3E /* StartStudyViewController.swift */,
+				5E06D4B81EA6CABD00DF182B /* ConnectivityManager.swift */,
+				5E06D4B61EA6BC3400DF182B /* ConnectViewController.swift */,
 				5ED3FB201E97DD2600E39132 /* TrialEndViewController.swift */,
 				5E5A47711E805B99001D422B /* Assets.xcassets */,
 				5E5A47731E805B99001D422B /* LaunchScreen.storyboard */,
@@ -276,7 +282,9 @@
 				7B6036221E97F5EB002D8B0D /* VideoViewController.swift in Sources */,
 				5ECC83641E81C40B009C2A3E /* StartStudyViewController.swift in Sources */,
 				5EE2B8241E8C1F6F0022CFDF /* DirectoryModel.swift in Sources */,
+				5E06D4B71EA6BC3400DF182B /* ConnectViewController.swift in Sources */,
 				5E5A476D1E805B99001D422B /* ViewController.swift in Sources */,
+				5E06D4B91EA6CABD00DF182B /* ConnectivityManager.swift in Sources */,
 				5E5A476B1E805B99001D422B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

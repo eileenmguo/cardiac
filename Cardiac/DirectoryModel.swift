@@ -12,6 +12,7 @@ class DirectoryModel {
     let FACE: String = "faceCam"
     let BODY: String = "bodyCam"
     let POSITIONS: [String] = ["supine", "sitting", "sevens", "standing"]
+    let SERVICE_TYPE = "cardiac"
     
     static let sharedInstance = DirectoryModel()
     let documentsURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

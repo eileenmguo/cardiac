@@ -100,7 +100,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1370" y="263"/>
+            <point key="canvasLocation" x="-300" y="997"/>
         </scene>
         <!--FaceCamDataCollection-->
         <scene sceneID="290-On-Gd4">
@@ -1257,6 +1257,115 @@
             </objects>
             <point key="canvasLocation" x="-1370" y="1757"/>
         </scene>
+        <!--Connect View Controller-->
+        <scene sceneID="dT4-Vn-7WS">
+            <objects>
+                <viewController storyboardIdentifier="faceCamConnecting" id="hjv-9U-fFC" customClass="ConnectViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rDz-Hy-VLF"/>
+                        <viewControllerLayoutGuide type="bottom" id="Or9-2X-sP5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uiQ-BL-bKf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBx-n6-u8p">
+                                <rect key="frame" x="16" y="161" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="FaceCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
+                                <rect key="frame" x="16" y="69" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uir-xF-DZO">
+                                <rect key="frame" x="16" y="218" width="51" height="31"/>
+                                <connections>
+                                    <action selector="toggle:" destination="hjv-9U-fFC" eventType="valueChanged" id="xvA-fD-FMq"/>
+                                </connections>
+                            </switch>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="zBx-n6-u8p" firstAttribute="top" secondItem="rDz-Hy-VLF" secondAttribute="bottom" constant="141" id="DlN-ur-Wxd"/>
+                            <constraint firstItem="zBx-n6-u8p" firstAttribute="trailing" secondItem="uiQ-BL-bKf" secondAttribute="trailingMargin" id="EWd-d6-YfO"/>
+                            <constraint firstItem="Uir-xF-DZO" firstAttribute="top" secondItem="zBx-n6-u8p" secondAttribute="bottom" constant="36" id="aNh-Ce-cUR"/>
+                            <constraint firstItem="zBx-n6-u8p" firstAttribute="leading" secondItem="uiQ-BL-bKf" secondAttribute="leadingMargin" id="ddh-zE-ZVs"/>
+                            <constraint firstItem="Uir-xF-DZO" firstAttribute="leading" secondItem="H4D-xr-CjH" secondAttribute="leading" id="jw1-xv-Leo"/>
+                            <constraint firstItem="Uir-xF-DZO" firstAttribute="leading" secondItem="zBx-n6-u8p" secondAttribute="leading" id="q71-R9-kKJ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="connectionsLabel" destination="zBx-n6-u8p" id="h6n-fM-JPT"/>
+                        <outlet property="toggler" destination="Uir-xF-DZO" id="xRP-o3-yLP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yqq-be-YOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1359.2" y="293.70314842578711"/>
+        </scene>
+        <!--Connect View Controller-->
+        <scene sceneID="OKc-2Z-raM">
+            <objects>
+                <viewController storyboardIdentifier="BodyCamConnecting" id="LYX-R9-cgZ" customClass="ConnectViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TGI-M1-MTZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="9Zg-1p-ikf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="w8z-LW-kIN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7D5-GY-2h4">
+                                <rect key="frame" x="164" y="617" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="2Fe-Bk-yvs"/>
+                                </constraints>
+                                <state key="normal" title="Start"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YaO-w2-LU4">
+                                <rect key="frame" x="16" y="161" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="BodyCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z5T-LY-Iqa">
+                                <rect key="frame" x="16" y="69" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NaO-gx-Xte">
+                                <rect key="frame" x="26" y="217" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switch:" destination="LYX-R9-cgZ" eventType="valueChanged" id="Lr9-Sg-ciM"/>
+                                    <action selector="toggle:" destination="LYX-R9-cgZ" eventType="valueChanged" id="Ha5-py-iXQ"/>
+                                </connections>
+                            </switch>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="YaO-w2-LU4" firstAttribute="trailing" secondItem="w8z-LW-kIN" secondAttribute="trailingMargin" id="5f8-Kf-SU0"/>
+                            <constraint firstItem="NaO-gx-Xte" firstAttribute="leading" secondItem="w8z-LW-kIN" secondAttribute="leadingMargin" constant="10" id="DeK-yX-Cc2"/>
+                            <constraint firstItem="YaO-w2-LU4" firstAttribute="top" secondItem="TGI-M1-MTZ" secondAttribute="bottom" constant="141" id="K7W-SY-M55"/>
+                            <constraint firstAttribute="bottom" secondItem="7D5-GY-2h4" secondAttribute="bottom" constant="20" symbolic="YES" id="Tbo-O6-Ndp"/>
+                            <constraint firstItem="NaO-gx-Xte" firstAttribute="top" secondItem="YaO-w2-LU4" secondAttribute="bottom" constant="35" id="Tpa-Zm-aIe"/>
+                            <constraint firstItem="YaO-w2-LU4" firstAttribute="leading" secondItem="w8z-LW-kIN" secondAttribute="leadingMargin" id="WtV-od-efj"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="connectionsLabel" destination="YaO-w2-LU4" id="EcB-aq-LBO"/>
+                        <outlet property="toggler" destination="NaO-gx-Xte" id="DN4-vr-ZWl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jTZ-5U-KRr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2137" y="81"/>
+        </scene>
     </scenes>
     <resources>
         <image name="EarIcon" width="200" height="200"/>
@@ -1265,6 +1374,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wwQ-5s-aAx"/>
+        <segue reference="mJf-u9-lLb"/>
     </inferredMetricsTieBreakers>
 </document>
