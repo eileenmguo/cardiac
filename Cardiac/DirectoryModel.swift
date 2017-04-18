@@ -31,14 +31,15 @@ class DirectoryModel {
     
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
+        print(rootDirectoryURL.path)
         do {
             // Get the directory contents urls (including subfolders urls)
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil, options: [])
             if directoryContents.count == 0 {
-                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             } else {
                 try FileManager.default.removeItem(at: rootDirectoryURL)
-                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             }
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -64,8 +65,10 @@ class DirectoryModel {
     //Creates subject's root directory (can overwrite previously created directories)
     func createSubjectDirectory(directoryName: String, overwriteExistingSession overwrite: Bool = false)
         -> (success: Bool, error: String)? {
-            print(directoryName)
-            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
+//            print("rootDirectoryURL" + rootDirectoryURL.path)
+//            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
+            let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
+//            print("newURL" + newURL.path)
             let subjectAlreadyExists = FileManager.default.fileExists(atPath: newURL.path)
             do {
                 if subjectAlreadyExists {
@@ -94,30 +97,34 @@ class DirectoryModel {
             "startTime": trialStartTime.description,
             "endTime": trialEndTime.description,
             "positionType": POSITIONS[trialList.count],
-            "faceCamFilePath": videoFilePath!,
-            "bioECGFilePath": bioECGFilePath ?? "",
-            "bioGeneralFilePath": bioGeneralFilePath ?? ""
+            "faceCamFilePath": videoFilePath!.absoluteString,
+//            "bioECGFilePath": bioECGFilePath!.absoluteString,
+            "bioECGFilePath": "bioFilePath",
+//            "bioGeneralFilePath": bioGeneralFilePath!.absoluteString
+            "bioGeneralFilePath": "bioGeneralFilePath"
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
+    
     func saveBodyTrialRound(manualEntryData manualData: [String:Any]) {
         let tempDictionary = [
             "startTime": trialStartTime.description,
             "endTime": trialEndTime.description,
             "positionType": POSITIONS[trialList.count],
-            "bodyCamFilePath": videoFilePath!,
-            "E4FilePath": E4FilePath ?? "",
+            "bodyCamFilePath": videoFilePath!.absoluteString,
+//            "E4FilePath": E4FilePath!.absoluteString,
+            "E4FilePath": "E3filepath",
             "manualEntry": manualData
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
+    
     
     //Saving Subject's MetadataFile
     func finishSubjectSession() {
         subjectData["trailList"] = trialList
         let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
         do {
-            print(subjectData)
             let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
             FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
             

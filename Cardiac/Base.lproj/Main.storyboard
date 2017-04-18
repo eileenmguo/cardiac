@@ -72,7 +72,6 @@
                                 <state key="normal" title="Submit Study ID"/>
                                 <connections>
                                     <action selector="submitStudyID:" destination="O3h-YL-h6Q" eventType="touchUpInside" id="t65-FE-iJb"/>
-                                    <segue destination="dtf-ge-hlU" kind="show" id="HjW-A1-NWX"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -101,7 +100,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-540" y="770"/>
+            <point key="canvasLocation" x="-1370" y="263"/>
         </scene>
         <!--FaceCamDataCollection-->
         <scene sceneID="290-On-Gd4">
@@ -115,29 +114,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fNU-G0-0AL">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fNU-G0-0AL">
                                 <rect key="frame" x="16" y="13" width="41" height="46"/>
                                 <state key="normal" title="Home"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="show" id="wwQ-5s-aAx"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="WatchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="gJ8-Rh-c23">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WatchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="gJ8-Rh-c23">
                                 <rect key="frame" x="329" y="20" width="30" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="dgQ-uu-lNy"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="EarIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Llm-s1-m2X">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EarIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Llm-s1-m2X">
                                 <rect key="frame" x="291" y="20" width="30" height="32"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="XIcon" translatesAutoresizingMaskIntoConstraints="NO" id="QOc-lp-HwX">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="XIcon" translatesAutoresizingMaskIntoConstraints="NO" id="QOc-lp-HwX">
                                 <rect key="frame" x="291" y="20" width="30" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="7Hx-Ze-uKw"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="XIcon" translatesAutoresizingMaskIntoConstraints="NO" id="zRP-Ps-0Iu">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="XIcon" translatesAutoresizingMaskIntoConstraints="NO" id="zRP-Ps-0Iu">
                                 <rect key="frame" x="329" y="20" width="30" height="32"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dni-Tj-5vv">
@@ -147,8 +146,8 @@
                                     <segue destination="Ooq-1Z-LWE" kind="show" id="OLP-IL-1xf"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nu-YL-2Fw">
-                                <rect key="frame" x="16" y="26" width="343" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nu-YL-2Fw">
+                                <rect key="frame" x="81" y="26" width="214" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -178,12 +177,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="rHF-O7-pD8" firstAttribute="baseline" secondItem="dni-Tj-5vv" secondAttribute="baseline" id="04B-cR-onv"/>
-                            <constraint firstItem="fNU-G0-0AL" firstAttribute="top" secondItem="8S3-wZ-iiX" secondAttribute="bottom" constant="-25" id="0UC-59-RSM"/>
+                            <constraint firstItem="fNU-G0-0AL" firstAttribute="top" secondItem="8S3-wZ-iiX" secondAttribute="bottom" constant="-7" id="0UC-59-RSM"/>
                             <constraint firstItem="zRP-Ps-0Iu" firstAttribute="leading" secondItem="gJ8-Rh-c23" secondAttribute="leading" id="1Or-oQ-Aau"/>
                             <constraint firstItem="zRP-Ps-0Iu" firstAttribute="top" secondItem="gJ8-Rh-c23" secondAttribute="top" id="25U-fP-414"/>
                             <constraint firstItem="fNU-G0-0AL" firstAttribute="leading" secondItem="yAJ-d5-Esh" secondAttribute="leadingMargin" id="9Ze-Ey-qkw"/>
                             <constraint firstItem="aQ2-ST-DVU" firstAttribute="leading" secondItem="dni-Tj-5vv" secondAttribute="leading" id="F8u-6G-hwy"/>
-                            <constraint firstItem="a49-pl-k54" firstAttribute="top" secondItem="fNU-G0-0AL" secondAttribute="bottom" constant="626" id="PrD-Yw-VvQ"/>
+                            <constraint firstItem="a49-pl-k54" firstAttribute="top" secondItem="fNU-G0-0AL" secondAttribute="bottom" constant="608" id="PrD-Yw-VvQ"/>
                             <constraint firstItem="Llm-s1-m2X" firstAttribute="leading" secondItem="QOc-lp-HwX" secondAttribute="leading" id="SAW-ow-HDR"/>
                             <constraint firstItem="2nu-YL-2Fw" firstAttribute="centerX" secondItem="yAJ-d5-Esh" secondAttribute="centerX" id="SB2-kL-htb"/>
                             <constraint firstItem="rHF-O7-pD8" firstAttribute="baseline" secondItem="aQ2-ST-DVU" secondAttribute="baseline" id="VDc-OI-gWe"/>
@@ -198,9 +197,9 @@
                             <constraint firstItem="dni-Tj-5vv" firstAttribute="trailing" secondItem="gJ8-Rh-c23" secondAttribute="trailing" id="nLT-tW-dyv"/>
                             <constraint firstItem="gJ8-Rh-c23" firstAttribute="trailing" secondItem="zRP-Ps-0Iu" secondAttribute="trailing" id="pUH-0Q-eId"/>
                             <constraint firstItem="QOc-lp-HwX" firstAttribute="top" secondItem="Llm-s1-m2X" secondAttribute="top" id="pjd-Jy-39D"/>
-                            <constraint firstItem="fNU-G0-0AL" firstAttribute="top" secondItem="Llm-s1-m2X" secondAttribute="top" constant="-25" id="qgv-kp-DWv"/>
+                            <constraint firstItem="fNU-G0-0AL" firstAttribute="top" secondItem="Llm-s1-m2X" secondAttribute="top" constant="-7" id="qgv-kp-DWv"/>
                             <constraint firstItem="2nu-YL-2Fw" firstAttribute="top" secondItem="8S3-wZ-iiX" secondAttribute="bottom" constant="6" id="r3F-kc-MWl"/>
-                            <constraint firstItem="fNU-G0-0AL" firstAttribute="bottom" secondItem="Llm-s1-m2X" secondAttribute="bottom" constant="-301" id="s2h-MA-a7y"/>
+                            <constraint firstItem="fNU-G0-0AL" firstAttribute="bottom" secondItem="Llm-s1-m2X" secondAttribute="bottom" constant="7" id="s2h-MA-a7y"/>
                             <constraint firstItem="dni-Tj-5vv" firstAttribute="leading" secondItem="fNU-G0-0AL" secondAttribute="leading" id="vGz-BT-civ"/>
                             <constraint firstItem="zRP-Ps-0Iu" firstAttribute="leading" secondItem="Llm-s1-m2X" secondAttribute="trailing" constant="8" symbolic="YES" id="wZB-GP-XvQ"/>
                             <constraint firstItem="QOc-lp-HwX" firstAttribute="top" secondItem="gJ8-Rh-c23" secondAttribute="top" id="xnJ-Ux-V0O"/>
@@ -215,7 +214,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lgw-js-YGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-540" y="1564.7676161919042"/>
+            <point key="canvasLocation" x="-1370.4000000000001" y="997.15142428785612"/>
         </scene>
         <!--BodyCamDemSurvey-->
         <scene sceneID="6SR-hK-nTz">
@@ -616,7 +615,6 @@
                                         <state key="normal" title="Submit Survey"/>
                                         <connections>
                                             <action selector="submitSurvey:" destination="Sci-em-XM1" eventType="touchUpInside" id="sWv-WF-d80"/>
-                                            <segue destination="zC2-T4-SkB" kind="show" id="FWL-CG-hvD"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -856,7 +854,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="377" y="1366"/>
+            <point key="canvasLocation" x="1148" y="884"/>
         </scene>
         <!--BodyCamDataCollection-->
         <scene sceneID="DYf-S3-Xk3">
@@ -953,7 +951,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6KB-Pw-O65" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1116" y="1049.3253373313344"/>
+            <point key="canvasLocation" x="2138" y="815"/>
         </scene>
         <!--BodyCamDataInput-->
         <scene sceneID="mU8-wA-ZaL">
@@ -1167,7 +1165,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1040.8" y="1874.2128935532235"/>
+            <point key="canvasLocation" x="2137" y="1624"/>
         </scene>
         <!--FaceCamComplete-->
         <scene sceneID="PAQ-bb-Edr">
@@ -1257,7 +1255,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="osP-9b-zl6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-540" y="2272"/>
+            <point key="canvasLocation" x="-1370" y="1757"/>
         </scene>
     </scenes>
     <resources>
@@ -1267,6 +1265,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Vyk-47-M4i"/>
+        <segue reference="wwQ-5s-aAx"/>
     </inferredMetricsTieBreakers>
 </document>

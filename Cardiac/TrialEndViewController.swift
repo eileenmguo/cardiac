@@ -46,26 +46,24 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         
         // need to update trialpostiion, startTime, endTime
         directoryModel.saveBodyTrialRound(manualEntryData: manualEntry)
-        let storyboard = self.storyboard
         if directoryModel.trialList.count < 4 {
-            let controller = storyboard?.instantiateViewController(withIdentifier: "bodyCam")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
             self.present(controller!, animated: true, completion: nil)
         } else {
             directoryModel.finishSubjectSession()
-            let controller = storyboard?.instantiateViewController(withIdentifier: "home")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
             self.present(controller!, animated: true, completion: nil)
         }
     }
     
     @IBAction func submitFaceTrialRound(_ sender: Any) {
         directoryModel.saveFaceTrailRound()
-        let storyboard = self.storyboard
         if directoryModel.trialList.count < 4 {
-            let controller = storyboard?.instantiateViewController(withIdentifier: "faceCam")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
             self.present(controller!, animated: true, completion: nil)
         } else {
             directoryModel.finishSubjectSession()
-            let controller = storyboard?.instantiateViewController(withIdentifier: "home")
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
             self.present(controller!, animated: true, completion: nil)
         }
     }

@@ -210,9 +210,15 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     // MARK: - Actions
     @IBAction func submitVideo(_ sender: Any) {
-        if directoryModel.subjectData["phoneMode"] as! String == directoryModel.BODY {
-            let videoCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
-            configureTorch(device: videoCaptureDevice, torchLevel: 0.0)
+        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
+        if (device.torchMode == AVCaptureTorchMode.on) {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = AVCaptureTorchMode.off
+                device.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
         }
     }
     
