@@ -12,6 +12,8 @@ import UIKit
 class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
     let directoryModel = DirectoryModel.sharedInstance
+    let connectivityManager = ConnectivityManager.sharedInstance
+
 
     @IBOutlet weak var CardioBuddyBPM: UITextField!
     @IBOutlet weak var PulseOxSp02: UITextField!
@@ -30,46 +32,14 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var roundDesc: UILabel!
     @IBOutlet weak var nextButton: UIButton!
     
-    
-    @IBAction func submitBodyTrialRound(_ sender: Any) {
-        let manualEntry = [
-            "cardioBuddyBPM": CardioBuddyBPM.text!,
-            "pulseOx": ["sp02": PulseOxSp02.text!, "bpm": PulseOxBPM.text!],
-            "bloodPressure": bloodPressureGT.text!,
-            "iCare": [
-                "bloodViscosity": iCareBloodViscosity.text!,
-                "pulseOx": iCarePulseOx.text!,
-                "bpm": iCareBPM.text!,
-                "bloodPressure": iCareBloodPressure.text!
-            ]
-        ]  as [String : Any]
-        
-        // need to update trialpostiion, startTime, endTime
-        directoryModel.saveBodyTrialRound(manualEntryData: manualEntry)
-        if directoryModel.trialList.count < 4 {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
-            self.present(controller!, animated: true, completion: nil)
-        } else {
-            directoryModel.finishSubjectSession()
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
-            self.present(controller!, animated: true, completion: nil)
-        }
-    }
-    
-    @IBAction func submitFaceTrialRound(_ sender: Any) {
-        directoryModel.saveFaceTrailRound()
-        if directoryModel.trialList.count < 4 {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
-            self.present(controller!, animated: true, completion: nil)
-        } else {
-            directoryModel.finishSubjectSession()
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
-            self.present(controller!, animated: true, completion: nil)
-        }
+
+    @IBAction func submitRound(_ sender: Any) {
+        submit()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        connectivityManager.delegate = self
         
         if directoryModel.trialList.count < 3 {
             self.roundDesc.text = directoryModel.POSITIONS[directoryModel.trialList.count] + " round is complete!"
@@ -78,22 +48,69 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
             self.roundDesc.text = "Study is complete!"
             self.nextButton.setTitle("Finish", for: UIControlState.normal)
         }
-        
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(TrialEndViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
-        
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
-    //Calls this function when the tap is recognized.
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
+    func submit() {
+        if directoryModel.phoneMode! == directoryModel.FACE {
+            directoryModel.saveFaceTrailRound()
+            if directoryModel.trialList.count < 4 {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
+                self.show(controller!, sender: self)
+            } else {
+                directoryModel.finishSubjectSession()
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+                self.show(controller!, sender: self)
+            }
+        } else {
+            let manualEntry = [
+                "cardioBuddyBPM": CardioBuddyBPM.text!,
+                "pulseOx": ["sp02": PulseOxSp02.text!, "bpm": PulseOxBPM.text!],
+                "bloodPressure": bloodPressureGT.text!,
+                "iCare": [
+                    "bloodViscosity": iCareBloodViscosity.text!,
+                    "pulseOx": iCarePulseOx.text!,
+                    "bpm": iCareBPM.text!,
+                    "bloodPressure": iCareBloodPressure.text!
+                ]
+                ]  as [String : Any]
+            
+            // need to update trialpostiion, startTime, endTime
+            directoryModel.saveBodyTrialRound(manualEntryData: manualEntry)
+            if directoryModel.trialList.count < 4 {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
+                self.show(controller!, sender: self)
+            } else {
+                directoryModel.finishSubjectSession()
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+                self.show(controller!, sender: self)
+            }
+        }
+    
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
+
+
+extension TrialEndViewController : ConnectivityManagerDelegate {
+    func didReceive(message: [String:Any]) {
+        switch message["action"] as! String {
+        case directoryModel.SUBMIT_RND:
+            submit()
+        case directoryModel.RESET_RND:
+            print("Trial End eventually implement reset round")
+        //reset round
+        default:
+            print("TrialEndViewController was unable to parse message")
+        }
+    }
+    
+    func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
+        print("Connections: \(connectedDevices)")
+    }
+}
+
+

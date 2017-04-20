@@ -11,6 +11,7 @@ import Foundation
 import MultipeerConnectivity
 
 class ConnectivityManager : NSObject {
+    static let sharedInstance = ConnectivityManager()
     
     var delegate:ConnectivityManagerDelegate?
     let directoryModel = DirectoryModel.sharedInstance
@@ -39,15 +40,6 @@ class ConnectivityManager : NSObject {
         self.browser.startBrowsingForPeers()
     }
     
-    //    func startBinding() {
-    //        self.debugger?.debug(message: "Looking for other devices")
-    //        self.advertiser.startAdvertisingPeer()
-    //    }
-    
-    //    func stopBinding() {
-    //        self.advertiser.stopAdvertisingPeer()
-    //    }
-    
     deinit {
         self.advertiser.stopAdvertisingPeer()
         self.browser.stopBrowsingForPeers()
@@ -63,8 +55,6 @@ class ConnectivityManager : NSObject {
                 NSLog("Error sending message in connectivity manager")
             }
         }
-        
-        NSLog("No peerIDs to send message to")
     }
 }
 

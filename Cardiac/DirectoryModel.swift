@@ -12,13 +12,25 @@ class DirectoryModel {
     let FACE: String = "faceCam"
     let BODY: String = "bodyCam"
     let POSITIONS: [String] = ["supine", "sitting", "sevens", "standing"]
+    
+    // Actions for connectivityManager delegates to listen for
+    let START_EXP = "startExperiment"
+    let START_VID = "startVideo"
+    let STOP_VID = "stopVideo"
+    let SUBMIT_VID = "submitVideo"
+    let SUBMIT_RND = "submitRound"
+    let RESET_RND = "resetRound"
+    
+    // For Connectivity manager
     let SERVICE_TYPE = "cardiac"
     
     static let sharedInstance = DirectoryModel()
+    
     let documentsURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let rootDirectoryURL: URL
+    var rootDirectoryURL: URL
     var subjectDirectoryURL: URL?
     
+    var phoneMode:String?
     var subjectData = [String: Any]()
     var trialList = [[String: Any]]()
     
@@ -40,6 +52,8 @@ class DirectoryModel {
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             } else {
                 try FileManager.default.removeItem(at: rootDirectoryURL)
+                self.rootDirectoryURL.appendPathExtension("+")
+                print(rootDirectoryURL.absoluteString)
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             }
         } catch let error as NSError {
@@ -48,7 +62,8 @@ class DirectoryModel {
     }
     
     // starts when demographic data is submitted
-    func startBodySession(demographicData: [String:Any], overwriteExistingSession overwrite: Bool = false) -> (success: Bool, error: String)? {
+    func startBodySession(demographicData: [String:Any], overwriteExistingSession overwrite: Bool = true) -> (success: Bool, error: String)? {
+        self.phoneMode = BODY
         self.subjectData["phoneMode"] = BODY
         self.subjectData["subjectID"] = Int(demographicData["subjectID"] as! String)
         self.subjectData["demographicData"] = demographicData
@@ -58,6 +73,7 @@ class DirectoryModel {
     //Starts when subjectID is submitted
     func startFaceSession(subjectID: String, overwriteExistingSession overwrite: Bool = false) ->
         (success: Bool, error: String)? {
+        self.phoneMode = FACE
         self.subjectData["phoneMode"] = FACE
         self.subjectData["subjectID"] = subjectID
         return createSubjectDirectory(directoryName: String(describing: subjectData["subjectID"]!) + String(describing: subjectData["phoneMode"]!), overwriteExistingSession: overwrite)
@@ -66,9 +82,9 @@ class DirectoryModel {
     //Creates subject's root directory (can overwrite previously created directories)
     func createSubjectDirectory(directoryName: String, overwriteExistingSession overwrite: Bool = false)
         -> (success: Bool, error: String)? {
-//            print("rootDirectoryURL" + rootDirectoryURL.path)
-//            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
-            let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
+            print("rootDirectoryURL" + rootDirectoryURL.path)
+            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
+//            let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
 //            print("newURL" + newURL.path)
             let subjectAlreadyExists = FileManager.default.fileExists(atPath: newURL.path)
             do {

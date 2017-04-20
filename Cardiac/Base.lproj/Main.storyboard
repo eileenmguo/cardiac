@@ -142,9 +142,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dni-Tj-5vv">
                                 <rect key="frame" x="16" y="617" width="343" height="30"/>
                                 <state key="normal" title="Start Sync"/>
-                                <connections>
-                                    <segue destination="Ooq-1Z-LWE" kind="show" id="OLP-IL-1xf"/>
-                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nu-YL-2Fw">
                                 <rect key="frame" x="81" y="26" width="214" height="21"/>
@@ -895,7 +892,6 @@
                                 <state key="normal" title="Submit Video"/>
                                 <connections>
                                     <action selector="submitVideo:" destination="zC2-T4-SkB" eventType="touchUpInside" id="kuc-D8-8Es"/>
-                                    <segue destination="2kc-d5-06H" kind="show" id="qtY-LC-txf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mq4-DI-aSj">
@@ -956,7 +952,7 @@
         <!--BodyCamDataInput-->
         <scene sceneID="mU8-wA-ZaL">
             <objects>
-                <viewController title="BodyCamDataInput" id="2kc-d5-06H" customClass="TrialEndViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bodyCamSubmit" title="BodyCamDataInput" id="2kc-d5-06H" customClass="TrialEndViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="GRs-FO-cJ5"/>
                         <viewControllerLayoutGuide type="bottom" id="kjc-i0-mBJ"/>
@@ -1095,7 +1091,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Finish"/>
                                 <connections>
-                                    <action selector="submitBodyTrialRound:" destination="2kc-d5-06H" eventType="touchUpInside" id="qqo-BS-y43"/>
+                                    <action selector="submitRound:" destination="2kc-d5-06H" eventType="touchUpInside" id="xsc-nZ-pZq"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Trail Round Complete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Vs-aL-KAy">
@@ -1170,7 +1166,7 @@
         <!--FaceCamComplete-->
         <scene sceneID="PAQ-bb-Edr">
             <objects>
-                <viewController title="FaceCamComplete" id="Ooq-1Z-LWE" customClass="TrialEndViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="faceCamSubmit" title="FaceCamComplete" id="Ooq-1Z-LWE" customClass="TrialEndViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JhO-gm-3Rd"/>
                         <viewControllerLayoutGuide type="bottom" id="6Fa-TO-uJD"/>
@@ -1208,7 +1204,7 @@
                                 <rect key="frame" x="16" y="617" width="343" height="30"/>
                                 <state key="normal" title="Finish"/>
                                 <connections>
-                                    <action selector="submitFaceTrialRound:" destination="Ooq-1Z-LWE" eventType="touchUpInside" id="gYL-mJ-PJJ"/>
+                                    <action selector="submitRound:" destination="Ooq-1Z-LWE" eventType="touchUpInside" id="7pn-Up-3wL"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Collection Complete!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7U-eK-sXE">
@@ -1275,32 +1271,45 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="FaceCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FaceCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
                                 <rect key="frame" x="16" y="69" width="343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uir-xF-DZO">
-                                <rect key="frame" x="16" y="218" width="51" height="31"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Wh-k8-83Y">
+                                <rect key="frame" x="16" y="617" width="343" height="30"/>
+                                <state key="normal" title="Start"/>
                                 <connections>
-                                    <action selector="toggle:" destination="hjv-9U-fFC" eventType="valueChanged" id="xvA-fD-FMq"/>
+                                    <action selector="onPress:" destination="hjv-9U-fFC" eventType="touchUpInside" id="12y-uv-Amj"/>
                                 </connections>
-                            </switch>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Stl-ui-Zmf">
+                                <rect key="frame" x="16" y="242" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="zBx-n6-u8p" firstAttribute="top" secondItem="rDz-Hy-VLF" secondAttribute="bottom" constant="141" id="DlN-ur-Wxd"/>
                             <constraint firstItem="zBx-n6-u8p" firstAttribute="trailing" secondItem="uiQ-BL-bKf" secondAttribute="trailingMargin" id="EWd-d6-YfO"/>
-                            <constraint firstItem="Uir-xF-DZO" firstAttribute="top" secondItem="zBx-n6-u8p" secondAttribute="bottom" constant="36" id="aNh-Ce-cUR"/>
+                            <constraint firstItem="H4D-xr-CjH" firstAttribute="trailing" secondItem="zBx-n6-u8p" secondAttribute="trailing" id="GZG-SV-NtD"/>
+                            <constraint firstItem="Stl-ui-Zmf" firstAttribute="trailing" secondItem="zBx-n6-u8p" secondAttribute="trailing" id="Pb9-eV-6fm"/>
+                            <constraint firstItem="H4D-xr-CjH" firstAttribute="trailing" secondItem="0Wh-k8-83Y" secondAttribute="trailing" id="QRZ-W1-6Pn"/>
+                            <constraint firstItem="H4D-xr-CjH" firstAttribute="top" secondItem="rDz-Hy-VLF" secondAttribute="bottom" constant="49" id="XaL-VH-ibC"/>
                             <constraint firstItem="zBx-n6-u8p" firstAttribute="leading" secondItem="uiQ-BL-bKf" secondAttribute="leadingMargin" id="ddh-zE-ZVs"/>
-                            <constraint firstItem="Uir-xF-DZO" firstAttribute="leading" secondItem="H4D-xr-CjH" secondAttribute="leading" id="jw1-xv-Leo"/>
-                            <constraint firstItem="Uir-xF-DZO" firstAttribute="leading" secondItem="zBx-n6-u8p" secondAttribute="leading" id="q71-R9-kKJ"/>
+                            <constraint firstItem="H4D-xr-CjH" firstAttribute="leading" secondItem="0Wh-k8-83Y" secondAttribute="leading" id="hTT-5Z-DsL"/>
+                            <constraint firstItem="Stl-ui-Zmf" firstAttribute="top" secondItem="zBx-n6-u8p" secondAttribute="bottom" constant="60" id="ndg-QW-Qs8"/>
+                            <constraint firstItem="H4D-xr-CjH" firstAttribute="leading" secondItem="zBx-n6-u8p" secondAttribute="leading" id="vEw-4I-z7d"/>
+                            <constraint firstItem="Stl-ui-Zmf" firstAttribute="leading" secondItem="zBx-n6-u8p" secondAttribute="leading" id="yWV-7P-lY7"/>
+                            <constraint firstAttribute="bottom" secondItem="0Wh-k8-83Y" secondAttribute="bottom" constant="20" symbolic="YES" id="zxD-p6-3rp"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="connectionsLabel" destination="zBx-n6-u8p" id="h6n-fM-JPT"/>
-                        <outlet property="toggler" destination="Uir-xF-DZO" id="xRP-o3-yLP"/>
+                        <outlet property="messageLabel" destination="Stl-ui-Zmf" id="nE5-nO-Eyg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yqq-be-YOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1310,7 +1319,7 @@
         <!--Connect View Controller-->
         <scene sceneID="OKc-2Z-raM">
             <objects>
-                <viewController storyboardIdentifier="BodyCamConnecting" id="LYX-R9-cgZ" customClass="ConnectViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bodyCamConnecting" id="LYX-R9-cgZ" customClass="ConnectViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TGI-M1-MTZ"/>
                         <viewControllerLayoutGuide type="bottom" id="9Zg-1p-ikf"/>
@@ -1319,12 +1328,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7D5-GY-2h4">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7D5-GY-2h4">
                                 <rect key="frame" x="164" y="617" width="46" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="46" id="2Fe-Bk-yvs"/>
+                                    <constraint firstAttribute="width" constant="46" id="zo4-ff-uHC"/>
                                 </constraints>
                                 <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="onPress:" destination="LYX-R9-cgZ" eventType="touchUpInside" id="gvB-gx-IWj"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YaO-w2-LU4">
                                 <rect key="frame" x="16" y="161" width="343" height="21"/>
@@ -1332,34 +1344,37 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="BodyCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z5T-LY-Iqa">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z5T-LY-Iqa">
                                 <rect key="frame" x="16" y="69" width="343" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NaO-gx-Xte">
-                                <rect key="frame" x="26" y="217" width="51" height="31"/>
-                                <connections>
-                                    <action selector="switch:" destination="LYX-R9-cgZ" eventType="valueChanged" id="Lr9-Sg-ciM"/>
-                                    <action selector="toggle:" destination="LYX-R9-cgZ" eventType="valueChanged" id="Ha5-py-iXQ"/>
-                                </connections>
-                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXT-UB-zVT">
+                                <rect key="frame" x="16" y="282" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="7D5-GY-2h4" firstAttribute="centerX" secondItem="gXT-UB-zVT" secondAttribute="centerX" id="3oh-Io-Rgv"/>
                             <constraint firstItem="YaO-w2-LU4" firstAttribute="trailing" secondItem="w8z-LW-kIN" secondAttribute="trailingMargin" id="5f8-Kf-SU0"/>
-                            <constraint firstItem="NaO-gx-Xte" firstAttribute="leading" secondItem="w8z-LW-kIN" secondAttribute="leadingMargin" constant="10" id="DeK-yX-Cc2"/>
+                            <constraint firstItem="gXT-UB-zVT" firstAttribute="trailing" secondItem="YaO-w2-LU4" secondAttribute="trailing" id="DqI-ut-Fn1"/>
                             <constraint firstItem="YaO-w2-LU4" firstAttribute="top" secondItem="TGI-M1-MTZ" secondAttribute="bottom" constant="141" id="K7W-SY-M55"/>
-                            <constraint firstAttribute="bottom" secondItem="7D5-GY-2h4" secondAttribute="bottom" constant="20" symbolic="YES" id="Tbo-O6-Ndp"/>
-                            <constraint firstItem="NaO-gx-Xte" firstAttribute="top" secondItem="YaO-w2-LU4" secondAttribute="bottom" constant="35" id="Tpa-Zm-aIe"/>
+                            <constraint firstItem="z5T-LY-Iqa" firstAttribute="top" secondItem="TGI-M1-MTZ" secondAttribute="bottom" constant="49" id="KxT-9w-cjl"/>
+                            <constraint firstItem="gXT-UB-zVT" firstAttribute="leading" secondItem="z5T-LY-Iqa" secondAttribute="leading" id="SmR-zl-NcG"/>
+                            <constraint firstAttribute="bottom" secondItem="7D5-GY-2h4" secondAttribute="bottom" constant="20" symbolic="YES" id="U4t-X2-LCa"/>
                             <constraint firstItem="YaO-w2-LU4" firstAttribute="leading" secondItem="w8z-LW-kIN" secondAttribute="leadingMargin" id="WtV-od-efj"/>
+                            <constraint firstItem="gXT-UB-zVT" firstAttribute="leading" secondItem="YaO-w2-LU4" secondAttribute="leading" id="mik-bg-mBn"/>
+                            <constraint firstItem="gXT-UB-zVT" firstAttribute="trailing" secondItem="z5T-LY-Iqa" secondAttribute="trailing" id="qne-j9-ssC"/>
+                            <constraint firstItem="gXT-UB-zVT" firstAttribute="top" secondItem="w8z-LW-kIN" secondAttribute="top" constant="282" id="r6m-GP-kPT"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="connectionsLabel" destination="YaO-w2-LU4" id="EcB-aq-LBO"/>
-                        <outlet property="toggler" destination="NaO-gx-Xte" id="DN4-vr-ZWl"/>
+                        <outlet property="messageLabel" destination="gXT-UB-zVT" id="aZc-ZH-dfk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jTZ-5U-KRr" userLabel="First Responder" sceneMemberID="firstResponder"/>

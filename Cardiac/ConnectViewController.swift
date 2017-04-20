@@ -9,17 +9,23 @@
 import Foundation
 import UIKit
 
+
 class ConnectViewController: UIViewController {
-    
     let directoryModel = DirectoryModel.sharedInstance
-    let connectivityManager = ConnectivityManager()
+    let connectivityManager = ConnectivityManager.sharedInstance
     
-    @IBOutlet weak var toggler: UISwitch!
+    @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var connectionsLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         connectivityManager.delegate = self
 
+    }
+    
+    override func  viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("CVC is disappearring")
     }
     
     override func didReceiveMemoryWarning() {
@@ -27,22 +33,35 @@ class ConnectViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func toggle(_ sender: Any) {
-        connectivityManager.send(message: ["toggler": self.toggler.isOn])
+    func startExperiment() {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode!)
+        DispatchQueue.main.async {
+            self.show(controller!, sender: self)
+        }
+    }
+    
+    @IBAction func onPress(_ sender: Any) {
+        connectivityManager.send(message: ["action": directoryModel.START_EXP])
+        startExperiment()
     }
 }
 
 
 extension ConnectViewController : ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
-        OperationQueue.main.addOperation {
-            self.toggler.isOn = (message["toggler"] != nil)
+        print("performing an action from video")
+        switch message["action"] as! String {
+        case directoryModel.START_EXP:
+            startExperiment()
+        default:
+            print("ConnectViewController was unable to parse message")
         }
     }
     
     func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
-        OperationQueue.main.addOperation {
+        DispatchQueue.main.async {
             self.connectionsLabel.text = "Connections: \(connectedDevices)"
         }
     }
 }
+

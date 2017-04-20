@@ -12,6 +12,8 @@ import AVFoundation
 class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     let directoryModel = DirectoryModel.sharedInstance
+    let connectivityManager = ConnectivityManager.sharedInstance
+
     
     let WHITE_BALANCE_TEMP: Float = 4000.0
     let WHITE_BALANCE_TINT: Float = 0.0
@@ -43,6 +45,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         return preview!
     }()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -50,6 +53,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         updateButtons(isRecording: false)
         
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
+        connectivityManager.delegate = self
         
         setupCameraSession()
     }
@@ -63,6 +67,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         
         cameraSession.startRunning()
     }
+
     
     // MARK: - Camera Setup
     
@@ -210,26 +215,16 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     // MARK: - Actions
     @IBAction func submitVideo(_ sender: Any) {
-        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
-        if (device.torchMode == AVCaptureTorchMode.on) {
-            do {
-                try device.lockForConfiguration()
-                device.torchMode = AVCaptureTorchMode.off
-                device.unlockForConfiguration()
-            } catch {
-                print(error)
-            }
-        }
+        submit()
     }
     
     @IBAction func pushRecord(_ sender: Any) {
-        beginRecording()
-        
-        startTimer()
-        updateButtons(isRecording: true)
+        connectivityManager.send(message: ["action": directoryModel.START_VID])
+        startRecording()
     }
     
     @IBAction func pushStop(_ sender: Any) {
+        //MOVE this into submit
         endRecording()
         
         stopTimer()
@@ -292,5 +287,51 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         self.recordButton.isEnabled = !isRecording
         self.stopButton.isEnabled = isRecording
     }
+    
+    // MARK: - Connectivity Manager Action Functions
+    
+    func startRecording() {
+        DispatchQueue.main.async {
+            self.beginRecording()
+            
+            self.startTimer()
+            self.updateButtons(isRecording: true)
+        }
+    }
+    
+    func submit() {
+        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
+        if (device.torchMode == AVCaptureTorchMode.on) {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = AVCaptureTorchMode.off
+                device.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
+        }
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode! + "submit")
+        self.show(controller!, sender: self)
+    }
 
+}
+
+extension VideoViewController : ConnectivityManagerDelegate {
+    func didReceive(message: [String:Any]) {
+        print("recieved message from video")
+        switch message["action"] as! String {
+        case directoryModel.START_VID:
+            startRecording()
+            print("recording")
+        case directoryModel.RESET_RND:
+            print("Trial End eventually implement reset round")
+        //reset round
+        default:
+            print("VideoViewController was unable to parse message")
+        }
+    }
+    
+    func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
+        print("Connections: \(connectedDevices)")
+    }
 }
