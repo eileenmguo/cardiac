@@ -34,6 +34,7 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
 
     @IBAction func submitRound(_ sender: Any) {
+        connectivityManager.send(message: ["action": directoryModel.SUBMIT_RND])
         submit()
     }
     

@@ -215,20 +215,18 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     // MARK: - Actions
     @IBAction func submitVideo(_ sender: Any) {
+        connectivityManager.send(message: ["action": directoryModel.SUBMIT_VID])
         submit()
     }
     
     @IBAction func pushRecord(_ sender: Any) {
         connectivityManager.send(message: ["action": directoryModel.START_VID])
-        startRecording()
+        startVideoRecording()
     }
     
     @IBAction func pushStop(_ sender: Any) {
-        //MOVE this into submit
-        endRecording()
-        
-        stopTimer()
-        updateButtons(isRecording: false)
+        connectivityManager.send(message: ["action": directoryModel.STOP_VID])
+        stopVideoRecording()
     }
     
     // MARK: - AVCaptureFileOutputRecordingDelegate
@@ -290,12 +288,21 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     // MARK: - Connectivity Manager Action Functions
     
-    func startRecording() {
+    func startVideoRecording() {
         DispatchQueue.main.async {
             self.beginRecording()
             
             self.startTimer()
             self.updateButtons(isRecording: true)
+        }
+    }
+    
+    func stopVideoRecording() {
+        DispatchQueue.main.async {
+            self.endRecording()
+            
+            self.stopTimer()
+            self.updateButtons(isRecording: false)
         }
     }
     
@@ -310,7 +317,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
                 print(error)
             }
         }
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode! + "submit")
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode! + "Submit")
         self.show(controller!, sender: self)
     }
 
@@ -318,16 +325,21 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
 
 extension VideoViewController : ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
-        print("recieved message from video")
         switch message["action"] as! String {
         case directoryModel.START_VID:
-            startRecording()
-            print("recording")
+            print("VideoViewController: Starting Video")
+            startVideoRecording()
+        case directoryModel.STOP_VID:
+            stopVideoRecording()
+            print("VideoViewController: Stopping video")
+        case directoryModel.SUBMIT_VID:
+            submit()
+            print("VideoViewController: Submitting video")
         case directoryModel.RESET_RND:
-            print("Trial End eventually implement reset round")
+            print("VideoViewController: Resetting Round")
         //reset round
         default:
-            print("VideoViewController was unable to parse message")
+            print("VideoViewController: Unable to parse received message")
         }
     }
     

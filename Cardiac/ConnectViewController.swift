@@ -14,12 +14,15 @@ class ConnectViewController: UIViewController {
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     
-    @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var phoneModeLabel: UILabel!
     @IBOutlet weak var connectionsLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         connectivityManager.delegate = self
+        DispatchQueue.main.async {
+            self.phoneModeLabel.text = self.directoryModel.phoneMode
+        }
 
     }
     
