@@ -68,6 +68,18 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         cameraSession.startRunning()
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
+        if (device.torchMode == AVCaptureTorchMode.on) {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = AVCaptureTorchMode.off
+                device.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
+        }
+    }
     
     // MARK: - Camera Setup
     
@@ -290,6 +302,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     func startVideoRecording() {
         DispatchQueue.main.async {
+            self.directoryModel.trialStartTime = NSDate().timeIntervalSince1970
             self.beginRecording()
             
             self.startTimer()
@@ -299,6 +312,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     func stopVideoRecording() {
         DispatchQueue.main.async {
+            self.directoryModel.trialEndTime = NSDate().timeIntervalSince1970
             self.endRecording()
             
             self.stopTimer()

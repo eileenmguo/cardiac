@@ -30,17 +30,18 @@ class DirectoryModel {
     var rootDirectoryURL: URL
     var subjectDirectoryURL: URL?
     
-    var phoneMode:String?
+    var phoneMode: String?
     var subjectData = [String: Any]()
     var trialList = [[String: Any]]()
     
-    var trialStartTime: Date = Date() //TEMP What do we want these to be exactly?
-    var trialEndTime: Date = Date() //TEMP
+    var trialStartTime: Double?
+    var trialEndTime: Double?
     
     var videoFilePath: URL?
     var E4FilePath: URL?
-    var bioECGFilePath: URL?
-    var bioGeneralFilePath: URL?
+    var BHInfo: [String: Any]?
+    
+    var subDirNum: Int = 0
     
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
@@ -50,22 +51,23 @@ class DirectoryModel {
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil, options: [])
             if directoryContents.count == 0 {
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
-            } else {
-                try FileManager.default.removeItem(at: rootDirectoryURL)
-                self.rootDirectoryURL.appendPathExtension("+")
-                print(rootDirectoryURL.absoluteString)
-                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             }
+//            else {
+//                try FileManager.default.removeItem(at: rootDirectoryURL)
+//                self.rootDirectoryURL.appendPathExtension("+")
+//                print(rootDirectoryURL.absoluteString)
+//                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+//            }
         } catch let error as NSError {
             print(error.localizedDescription)
         }
     }
     
     // starts when demographic data is submitted
-    func startBodySession(demographicData: [String:Any], overwriteExistingSession overwrite: Bool = true) -> (success: Bool, error: String)? {
+    func startBodySession(demographicData: [String:Any], overwriteExistingSession overwrite: Bool = false) -> (success: Bool, error: String)? {
         self.phoneMode = BODY
         self.subjectData["phoneMode"] = BODY
-        self.subjectData["subjectID"] = Int(demographicData["subjectID"] as! String)
+        self.subjectData["subjectID"] = demographicData["subjectID"] as! String
         self.subjectData["demographicData"] = demographicData
         return createSubjectDirectory(directoryName: String(describing: subjectData["subjectID"]!) + String(describing:subjectData["phoneMode"]!), overwriteExistingSession: overwrite)
     }
@@ -83,22 +85,21 @@ class DirectoryModel {
     func createSubjectDirectory(directoryName: String, overwriteExistingSession overwrite: Bool = false)
         -> (success: Bool, error: String)? {
             print("rootDirectoryURL" + rootDirectoryURL.path)
-            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
-//            let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
+//            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
+            let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
 //            print("newURL" + newURL.path)
             let subjectAlreadyExists = FileManager.default.fileExists(atPath: newURL.path)
-            do {
+            createDirectory: do {
                 if subjectAlreadyExists {
                     if overwrite {
                         try FileManager.default.removeItem(at: newURL)
                     } else {
-                        
-                        print("SubjectID has already been used. Authorize to overwrite it")
-                        
-                        return (false, "SubjectID has already been used. Authorize to overwrite it")
+                        print("SubjectID has already been used. Using existing directory")
+                        break createDirectory
                     }
                 }
                 try FileManager.default.createDirectory(at: newURL, withIntermediateDirectories: false, attributes: nil)
+                self.subDirNum += 1
             } catch let error as NSError {
                 print(error.localizedDescription)
                 return (false, "Error creating/deleting directory")
@@ -111,22 +112,19 @@ class DirectoryModel {
     // Saving data from each round (sevens, sitting, standing, etc.) to the trial list
     func saveFaceTrailRound() {
         let tempDictionary = [
-            "startTime": trialStartTime.description,
-            "endTime": trialEndTime.description,
+            "startTime": trialStartTime!,
+            "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
             "faceCamFilePath": videoFilePath!.absoluteString,
-//            "bioECGFilePath": bioECGFilePath!.absoluteString,
-            "bioECGFilePath": "bioFilePath",
-//            "bioGeneralFilePath": bioGeneralFilePath!.absoluteString
-            "bioGeneralFilePath": "bioGeneralFilePath"
+            "BHInfo": BHInfo!
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
     
     func saveBodyTrialRound(manualEntryData manualData: [String:Any]) {
         let tempDictionary = [
-            "startTime": trialStartTime.description,
-            "endTime": trialEndTime.description,
+            "startTime": trialStartTime!,
+            "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
             "bodyCamFilePath": videoFilePath!.absoluteString,
 //            "E4FilePath": E4FilePath!.absoluteString,
@@ -145,23 +143,29 @@ class DirectoryModel {
             let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
             FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
             
-            self.bioECGFilePath = nil
-            self.bioGeneralFilePath = nil
-            self.videoFilePath = nil
-            self.E4FilePath = nil
-            self.subjectDirectoryURL = nil
-            self.subjectData = [String: Any]()
-            self.trialList = [[String: Any]]()
+            resetModel()
         } catch let error as NSError {
             print(error.localizedDescription)
         }
     }
     
     func generateVideoFileURL() -> (URL){
-        let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + String(describing: subjectData["phoneMode"]!) + ".mov"
-        self.videoFilePath = URL.init(fileURLWithPath: filePath, relativeTo: subjectDirectoryURL)
+        let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + String(describing: subjectData["phoneMode"]!)
+        var version = 0
+        repeat {
+            version += 1
+            self.videoFilePath = URL.init(fileURLWithPath: filePath + String(version) + ".mov", relativeTo: subjectDirectoryURL)
+        } while FileManager.default.fileExists(atPath: self.videoFilePath!.path)
         return videoFilePath!
     }
-
+    
+    func resetModel() {
+        self.BHInfo = nil
+        self.videoFilePath = nil
+        self.E4FilePath = nil
+        self.subjectDirectoryURL = nil
+        self.subjectData = [String: Any]()
+        self.trialList = [[String: Any]]()
+    }
 }
 

@@ -26,6 +26,7 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func screenTapped(_ sender: Any) {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
+        allFieldsCompleted()
     }
     
     
@@ -49,6 +50,11 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
             self.roundDesc.text = "Study is complete!"
             self.nextButton.setTitle("Finish", for: UIControlState.normal)
         }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     func submit() {
@@ -88,10 +94,15 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         }
     
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func allFieldsCompleted() {
+        if (self.restorationIdentifier == "bodyCamSubmit") {
+            if (CardioBuddyBPM.text!.isEmpty || PulseOxBPM.text!.isEmpty || PulseOxSp02.text!.isEmpty || bloodPressureGT.text!.isEmpty || iCareBPM.text!.isEmpty || iCarePulseOx.text!.isEmpty || iCareBloodPressure.text!.isEmpty || iCareBloodViscosity.text!.isEmpty) {
+                self.nextButton.isEnabled = false
+            } else {
+                self.nextButton.isEnabled = true
+            }
+        }
     }
 }
 

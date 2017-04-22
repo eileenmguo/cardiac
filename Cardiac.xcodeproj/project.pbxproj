@@ -16,6 +16,8 @@
 		5E5A47751E805B99001D422B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E5A47731E805B99001D422B /* LaunchScreen.storyboard */; };
 		5E5A47801E805B99001D422B /* CardiacTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5A477F1E805B99001D422B /* CardiacTests.swift */; };
 		5E5A478B1E805B99001D422B /* CardiacUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5A478A1E805B99001D422B /* CardiacUITests.swift */; };
+		5EACF2F01EAAC79800A6C101 /* BioHarness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EACF2EF1EAAC79800A6C101 /* BioHarness.swift */; };
+		5EACF2F21EAAC7DD00A6C101 /* BioHarnessDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EACF2F11EAAC7DD00A6C101 /* BioHarnessDevice.swift */; };
 		5ECC83641E81C40B009C2A3E /* StartStudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECC83631E81C40B009C2A3E /* StartStudyViewController.swift */; };
 		5ED3FB211E97DD2600E39132 /* TrialEndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED3FB201E97DD2600E39132 /* TrialEndViewController.swift */; };
 		5EE2B8241E8C1F6F0022CFDF /* DirectoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */; };
@@ -55,6 +57,8 @@
 		5E5A47861E805B99001D422B /* CardiacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardiacUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E5A478A1E805B99001D422B /* CardiacUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardiacUITests.swift; sourceTree = "<group>"; };
 		5E5A478C1E805B99001D422B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EACF2EF1EAAC79800A6C101 /* BioHarness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioHarness.swift; sourceTree = "<group>"; };
+		5EACF2F11EAAC7DD00A6C101 /* BioHarnessDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioHarnessDevice.swift; sourceTree = "<group>"; };
 		5ECC83631E81C40B009C2A3E /* StartStudyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartStudyViewController.swift; sourceTree = "<group>"; };
 		5ED3FB201E97DD2600E39132 /* TrialEndViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrialEndViewController.swift; sourceTree = "<group>"; };
 		5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryModel.swift; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 				5EE2B8231E8C1F6F0022CFDF /* DirectoryModel.swift */,
 				5ECC83631E81C40B009C2A3E /* StartStudyViewController.swift */,
 				5E06D4B81EA6CABD00DF182B /* ConnectivityManager.swift */,
+				5EACF2EF1EAAC79800A6C101 /* BioHarness.swift */,
+				5EACF2F11EAAC7DD00A6C101 /* BioHarnessDevice.swift */,
 				5E06D4B61EA6BC3400DF182B /* ConnectViewController.swift */,
 				5ED3FB201E97DD2600E39132 /* TrialEndViewController.swift */,
 				5E5A47711E805B99001D422B /* Assets.xcassets */,
@@ -280,6 +286,8 @@
 			files = (
 				5ED3FB211E97DD2600E39132 /* TrialEndViewController.swift in Sources */,
 				7B6036221E97F5EB002D8B0D /* VideoViewController.swift in Sources */,
+				5EACF2F01EAAC79800A6C101 /* BioHarness.swift in Sources */,
+				5EACF2F21EAAC7DD00A6C101 /* BioHarnessDevice.swift in Sources */,
 				5ECC83641E81C40B009C2A3E /* StartStudyViewController.swift in Sources */,
 				5EE2B8241E8C1F6F0022CFDF /* DirectoryModel.swift in Sources */,
 				5E06D4B71EA6BC3400DF182B /* ConnectViewController.swift in Sources */,

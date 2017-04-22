@@ -18,9 +18,9 @@ class ConnectivityManager : NSObject {
     
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
     
-    private let advertiser:MCNearbyServiceAdvertiser
+    private var advertiser:MCNearbyServiceAdvertiser
     
-    private let browser:MCNearbyServiceBrowser
+    private var browser:MCNearbyServiceBrowser
     lazy var session:MCSession = {
         let session = MCSession(peer: self.myPeerID, securityIdentity: nil, encryptionPreference: .optional)
         session.delegate = self
@@ -29,9 +29,18 @@ class ConnectivityManager : NSObject {
     
     override init() {
         self.browser = MCNearbyServiceBrowser.init(peer: self.myPeerID, serviceType: directoryModel.SERVICE_TYPE)
-        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: directoryModel.SERVICE_TYPE)
+        let deviceInfo: [String:String] = ["subjectID": directoryModel.subjectData["subjectID"] as! String, "phoneMode": directoryModel.phoneMode!]
+        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: deviceInfo, serviceType: directoryModel.SERVICE_TYPE)
         
         super.init()
+
+    }
+    
+    func startConnection() {
+        self.browser = MCNearbyServiceBrowser.init(peer: self.myPeerID, serviceType: directoryModel.SERVICE_TYPE)
+        let deviceInfo: [String:String] = ["subjectID": directoryModel.subjectData["subjectID"] as! String, "phoneMode": directoryModel.phoneMode!]
+        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: deviceInfo, serviceType: directoryModel.SERVICE_TYPE)
+        
         
         self.advertiser.delegate = self
         self.advertiser.startAdvertisingPeer()
@@ -85,7 +94,12 @@ extension ConnectivityManager : MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         NSLog("%@", "foundPeer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
-        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        if (info!["phoneMode"] != directoryModel.phoneMode && info!["subjectID"] == directoryModel.subjectData["subjectID"] as? String) {
+            print("inviting peer")
+            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        } else {
+            print("peer not matching")
+        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

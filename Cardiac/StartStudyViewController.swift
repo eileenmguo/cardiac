@@ -48,9 +48,11 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var Smoke: UISegmentedControl!
     @IBOutlet weak var Alcohol: UISegmentedControl!
     
+    @IBOutlet weak var SubmitButton: UIButton!
     
     @IBAction func screenTapped(_ sender: Any) {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
+        allFieldsCompleted()
     }
 
     
@@ -64,6 +66,22 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func allFieldsCompleted() {
+        if (self.restorationIdentifier != "faceCamStart") {
+            if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty) {
+                self.SubmitButton.isEnabled = false
+            } else {
+                self.SubmitButton.isEnabled = true
+            }
+        } else {
+            if (StudyID.text!.isEmpty) {
+                self.SubmitButton.isEnabled = false
+            } else {
+                self.SubmitButton.isEnabled = true
+            }
+        }
     }
     
     @IBAction func submitStudyID(_ sender: Any) {
