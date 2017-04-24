@@ -29,8 +29,7 @@ class ConnectivityManager : NSObject {
     
     override init() {
         self.browser = MCNearbyServiceBrowser.init(peer: self.myPeerID, serviceType: directoryModel.SERVICE_TYPE)
-        let deviceInfo: [String:String] = ["subjectID": directoryModel.subjectData["subjectID"] as! String, "phoneMode": directoryModel.phoneMode!]
-        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: deviceInfo, serviceType: directoryModel.SERVICE_TYPE)
+        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: directoryModel.SERVICE_TYPE)
         
         super.init()
         
@@ -50,6 +49,7 @@ class ConnectivityManager : NSObject {
     func send(message: [String:Any]) {
         if session.connectedPeers.count > 0 {
             NSLog("sending message")
+            print(message)
             let data = NSKeyedArchiver.archivedData(withRootObject: message)
             do {
                 try self.session.send(data, toPeers: session.connectedPeers, with: .reliable)

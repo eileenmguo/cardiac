@@ -12,6 +12,8 @@ import UIKit
 class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
     let directoryModel = DirectoryModel.sharedInstance
+    let connectivityManager = ConnectivityManager.sharedInstance
+    var initiationPhone = [String: String]()
     
     @IBOutlet weak var StudyID: UITextField!
     @IBOutlet weak var Gender: UISegmentedControl!
@@ -58,6 +60,8 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        connectivityManager.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
     
     }
@@ -73,13 +77,29 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
             if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty) {
                 self.SubmitButton.isEnabled = false
             } else {
-                self.SubmitButton.isEnabled = true
+                if (!initiationPhone.isEmpty) {
+                    if (initiationPhone["subjectID"] == StudyID.text!) {
+                        self.SubmitButton.isEnabled = true
+                    } else {
+                        self.SubmitButton.isEnabled = false
+                    }
+                } else {
+                    self.SubmitButton.isEnabled = true
+                }
             }
         } else {
             if (StudyID.text!.isEmpty) {
                 self.SubmitButton.isEnabled = false
             } else {
-                self.SubmitButton.isEnabled = true
+                if (!initiationPhone.isEmpty) {
+                    if (initiationPhone["subjectID"] == StudyID.text!) {
+                        self.SubmitButton.isEnabled = true
+                    } else {
+                        self.SubmitButton.isEnabled = false
+                    }
+                } else {
+                    self.SubmitButton.isEnabled = true
+                }
             }
         }
     }
@@ -89,8 +109,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         if failed != nil {
             print(failed!.error)
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "connectingView")
-            self.show(controller!, sender: self)
+            handleExperimentStart()
         }
     }
     
@@ -119,9 +138,56 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         if failed != nil {
             print(failed!.error)
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "connectingView")
+            handleExperimentStart()
+        }
+    }
+    
+    func startExperiment() {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode!)
+        DispatchQueue.main.async {
             self.show(controller!, sender: self)
         }
     }
     
+    func handleExperimentStart() {
+        if (!initiationPhone.isEmpty) {
+            connectivityManager.send(message: ["action": directoryModel.START_EXP])
+            startExperiment()
+        } else {
+            connectivityManager.send(message: ["action": directoryModel.INITIATE_EXP, "subjectID": StudyID.text!])
+            self.SubmitButton.isEnabled = false
+        }
+    }
+    
+    func handleExperimentInitiation(subjectID: String) {
+        self.initiationPhone = ["subjectID": subjectID]
+
+        if (subjectID == StudyID.text!) {
+            DispatchQueue.main.async {
+                self.SubmitButton.isEnabled = true
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.SubmitButton.isEnabled = false
+            }
+        }
+    }
+}
+
+extension StartStudyViewController: ConnectivityManagerDelegate {
+    func didReceive(message: [String:Any]) {
+        switch message["action"] as! String {
+        case directoryModel.INITIATE_EXP:
+            handleExperimentInitiation(subjectID: message["subjectID"] as! String)
+        case directoryModel.START_EXP:
+            startExperiment()
+            print("StartStudyViewController: Starting experiment")
+        default:
+            print("StartStudyViewController: unable to parse message")
+        }
+    }
+    
+    func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
+        print("Connections: \(connectedDevices)")
+    }
 }

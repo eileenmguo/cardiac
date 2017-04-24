@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="hjv-9U-fFC">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -27,6 +27,7 @@
                                 <rect key="frame" x="154" y="250" width="67" height="30"/>
                                 <state key="normal" title="BodyCam"/>
                                 <connections>
+                                    <action selector="startBodyCam:" destination="BYZ-38-t0r" eventType="touchUpInside" id="brj-I4-hiv"/>
                                     <segue destination="Sci-em-XM1" kind="show" id="KCc-rq-QGb"/>
                                 </connections>
                             </button>
@@ -34,6 +35,7 @@
                                 <rect key="frame" x="155" y="347" width="64" height="30"/>
                                 <state key="normal" title="FaceCam"/>
                                 <connections>
+                                    <action selector="startFaceCam:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nL9-ja-r0S"/>
                                     <segue destination="O3h-YL-h6Q" kind="show" id="q7S-zw-T7O"/>
                                 </connections>
                             </button>
@@ -233,7 +235,7 @@
         <!--BodyCamDemSurvey-->
         <scene sceneID="6SR-hK-nTz">
             <objects>
-                <viewController title="BodyCamDemSurvey" id="Sci-em-XM1" customClass="StartStudyViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bodyCamStart" title="BodyCamDemSurvey" id="Sci-em-XM1" customClass="StartStudyViewController" customModule="Cardiac" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wyp-YF-zI9"/>
                         <viewControllerLayoutGuide type="bottom" id="kOr-GZ-u7F"/>
@@ -1178,7 +1180,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dho-Jc-6zh">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dho-Jc-6zh">
                                 <rect key="frame" x="19" y="617" width="340" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Finish"/>
@@ -1417,6 +1419,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="zDH-s4-QH3"/>
+        <segue reference="iEp-bA-V4R"/>
     </inferredMetricsTieBreakers>
 </document>

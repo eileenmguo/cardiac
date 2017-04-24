@@ -14,15 +14,14 @@ class ConnectViewController: UIViewController {
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     
+    let FINISHED_CONNECTING = "finishedConnecting"
+    
     @IBOutlet weak var phoneModeLabel: UILabel!
     @IBOutlet weak var connectionsLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         connectivityManager.delegate = self
-        DispatchQueue.main.async {
-            self.phoneModeLabel.text = self.directoryModel.phoneMode
-        }
 
     }
     
@@ -35,26 +34,25 @@ class ConnectViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func startExperiment() {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode!)
+    func startApp() {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
         DispatchQueue.main.async {
             self.show(controller!, sender: self)
         }
     }
     
     @IBAction func onPress(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.START_EXP])
-        startExperiment()
+        connectivityManager.send(message: ["action": FINISHED_CONNECTING])
+        startApp()
     }
 }
 
 
 extension ConnectViewController : ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
-        print("performing an action from video")
         switch message["action"] as! String {
-        case directoryModel.START_EXP:
-            startExperiment()
+        case FINISHED_CONNECTING:
+            startApp()
         default:
             print("ConnectViewController was unable to parse message")
         }

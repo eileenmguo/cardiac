@@ -14,6 +14,7 @@ class DirectoryModel {
     let POSITIONS: [String] = ["supine", "sitting", "sevens", "standing"]
     
     // Actions for connectivityManager delegates to listen for
+    let INITIATE_EXP = "initiateExperiment"
     let START_EXP = "startExperiment"
     let START_VID = "startVideo"
     let STOP_VID = "stopVideo"
