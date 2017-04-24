@@ -16,6 +16,9 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     let bioHarness = BioHarness.sharedInstance
 
     
+    @IBOutlet var BHStatus: [UILabel]!
+    
+    
     let WHITE_BALANCE_TEMP: Float = 4000.0
     let WHITE_BALANCE_TINT: Float = 0.0
     
@@ -55,6 +58,9 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
+        bioHarness.delegate = self
+        
+        bioHarness.interpretStatusCode(firstByte: <#T##UInt8#>)
         
         setupCameraSession()
     }
@@ -339,7 +345,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
 
 }
 
-extension VideoViewController : ConnectivityManagerDelegate {
+extension VideoViewController: ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
         case directoryModel.START_VID:
@@ -361,5 +367,49 @@ extension VideoViewController : ConnectivityManagerDelegate {
     
     func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
         print("Connections: \(connectedDevices)")
+    }
+}
+
+extension VideoViewController: BHDelegate {
+    func showAlert(alert: UIAlertController) {
+        self.present(alert, animated: true, completion: nil)
+    }
+    func updateStatusCodes(codes: Dictionary<String, Any>) {
+        var enableRecord = true
+        for label in BHStatus {
+            switch label.text! {
+            case "HR":
+                if codes["heartRateReliable"] as! String == "No" {
+                    label.backgroundColor = UIColor.red
+                    enableRecord = false
+                } else {
+                    label.backgroundColor = UIColor.green
+                }
+            case "HRV":
+                if codes["heartRateVariabilityReliable"] as! String == "No" {
+                    label.backgroundColor = UIColor.red
+                    enableRecord = false
+                } else {
+                    label.backgroundColor = UIColor.green
+                }
+            case "BR":
+                if codes["breatingRateReliable"] as! String == "No" {
+                    label.backgroundColor = UIColor.red
+                    enableRecord = false
+                } else {
+                    label.backgroundColor = UIColor.green
+                }
+            case "DW":
+                if codes["deviceWornDetectionLevel"] as! String == "Full Confidence" {
+                    label.backgroundColor = UIColor.green
+                } else {
+                    label.backgroundColor = UIColor.red
+                    enableRecord = false
+                }
+            default:
+                print("VideoViewController: Unable to parse Bio Harness Status code")
+            }
+        }
+        recordButton.isEnabled = enableRecord
     }
 }

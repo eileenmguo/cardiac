@@ -117,8 +117,8 @@ class DirectoryModel {
             "startTime": trialStartTime!,
             "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
-            "faceCamFilePath": videoFilePath!.absoluteString,
-            "BHFilePath": BHFilePath!.absoluteString,
+            "faceCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
+            "BHFilePath": BHFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
@@ -128,7 +128,7 @@ class DirectoryModel {
             "startTime": trialStartTime!,
             "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
-            "bodyCamFilePath": videoFilePath!.absoluteString,
+            "bodyCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
 //            "E4FilePath": E4FilePath!.absoluteString,
             "E4FilePath": "E3filepath",
             "manualEntry": manualData

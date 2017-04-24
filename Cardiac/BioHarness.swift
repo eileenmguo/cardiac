@@ -12,9 +12,9 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     static let sharedInstance = BioHarness()
     let directoryModel = DirectoryModel.sharedInstance
+    var delegate:BHDelegate?
     
     var zephyrConnected = false
-    
     
     var centralManager:CBCentralManager!
     var zephyr:CBPeripheral?
@@ -168,11 +168,9 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             let alertController = UIAlertController(title: "Central Manager State", message: message, preferredStyle: UIAlertControllerStyle.alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil)
             alertController.addAction(okAction)
-//            return alertController
+            self.delegate?.showAlert(alert: alertController)
         }
-//        return nil
     }
-    
     
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -254,3 +252,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 }
 
+protocol BHDelegate {
+    func showAlert(alert:UIAlertController)
+    func updateStatusCodes(codes: Dictionary<String, Any>)
+}
