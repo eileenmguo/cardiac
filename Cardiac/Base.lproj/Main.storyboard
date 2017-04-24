@@ -1040,6 +1040,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
                     <connections>
+                        <outlet property="heartX" destination="eos-oo-iy8" id="a4b-sX-1sw"/>
                         <outlet property="positionLabel" destination="Qes-OZ-l4f" id="E2h-Vw-Jg0"/>
                         <outlet property="recordButton" destination="Mq4-DI-aSj" id="tci-I4-ZRI"/>
                         <outlet property="stopButton" destination="xp5-SW-PSh" id="GeO-BZ-Ya8"/>
@@ -1073,20 +1074,6 @@
                                     <segue destination="BYZ-38-t0r" kind="show" id="iEp-bA-V4R"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HeartIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-Co-ect">
-                                <rect key="frame" x="329" y="28" width="30" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Cb4-Xy-WNG"/>
-                                    <constraint firstAttribute="width" constant="30" id="r9I-YS-YJx"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="XIcon" translatesAutoresizingMaskIntoConstraints="NO" id="C4a-QG-tke">
-                                <rect key="frame" x="329" y="28" width="30" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="fHP-47-04L"/>
-                                    <constraint firstAttribute="width" constant="30" id="qIG-0l-T5O"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CardioBuddy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rxs-WZ-c8I">
                                 <rect key="frame" x="19" y="95" width="100" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1210,19 +1197,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="C4a-QG-tke" firstAttribute="top" secondItem="Bs3-Co-ect" secondAttribute="top" id="0Jx-Au-gIV"/>
                             <constraint firstItem="rxs-WZ-c8I" firstAttribute="top" secondItem="XLX-Fm-s1P" secondAttribute="bottom" constant="-25" id="1Nc-d2-FFy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tRC-9W-JG8" secondAttribute="trailing" id="2Rl-gM-jhR"/>
                             <constraint firstItem="N3c-ZK-8vd" firstAttribute="top" secondItem="GRs-FO-cJ5" secondAttribute="bottom" constant="8" symbolic="YES" id="2ZV-lU-Apz"/>
                             <constraint firstItem="tRC-9W-JG8" firstAttribute="top" secondItem="qUl-Ev-x0e" secondAttribute="bottom" constant="8" id="3W9-L0-wTC"/>
                             <constraint firstAttribute="trailingMargin" secondItem="XNO-iH-BaT" secondAttribute="trailing" id="4Th-f0-sGd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="HwA-6v-GZ3" secondAttribute="trailing" id="6aX-4B-7UI"/>
-                            <constraint firstItem="Bs3-Co-ect" firstAttribute="trailing" secondItem="Vmw-mi-VT8" secondAttribute="trailingMargin" id="6iG-Gn-1nu"/>
                             <constraint firstAttribute="leadingMargin" secondItem="cni-ZF-Iq8" secondAttribute="leading" id="AeP-X4-jNq"/>
                             <constraint firstItem="cni-ZF-Iq8" firstAttribute="top" secondItem="M6E-NE-b2k" secondAttribute="bottom" constant="-25" id="AqG-2P-1eu"/>
                             <constraint firstItem="7Up-T4-DOd" firstAttribute="top" secondItem="HwA-6v-GZ3" secondAttribute="bottom" constant="-25" id="F8M-1p-Qgc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="M4t-Yu-rD8" secondAttribute="trailing" id="H2S-RY-mIu"/>
-                            <constraint firstItem="C4a-QG-tke" firstAttribute="leading" secondItem="Bs3-Co-ect" secondAttribute="leading" id="L4A-kS-qKm"/>
                             <constraint firstItem="rxs-WZ-c8I" firstAttribute="leading" secondItem="Vmw-mi-VT8" secondAttribute="leadingMargin" constant="3" id="MYs-HW-j3L"/>
                             <constraint firstAttribute="leadingMargin" secondItem="cLh-DF-xkm" secondAttribute="leading" id="Msp-kM-fU1"/>
                             <constraint firstItem="qUl-Ev-x0e" firstAttribute="top" secondItem="NCk-fS-5P3" secondAttribute="bottom" constant="8" id="NNO-eo-F3K"/>
@@ -1230,7 +1214,6 @@
                             <constraint firstAttribute="trailingMargin" secondItem="M6E-NE-b2k" secondAttribute="trailing" id="QR9-vb-0kF"/>
                             <constraint firstItem="M6E-NE-b2k" firstAttribute="top" secondItem="XLX-Fm-s1P" secondAttribute="bottom" constant="8" id="QzM-nC-Soz"/>
                             <constraint firstItem="XLX-Fm-s1P" firstAttribute="top" secondItem="GRs-FO-cJ5" secondAttribute="bottom" constant="70" id="TVm-sa-k3j"/>
-                            <constraint firstItem="Bs3-Co-ect" firstAttribute="top" secondItem="N3c-ZK-8vd" secondAttribute="top" id="aQM-KE-uRx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NCk-fS-5P3" secondAttribute="trailing" id="d36-ep-d0w"/>
                             <constraint firstItem="N3c-ZK-8vd" firstAttribute="leading" secondItem="Vmw-mi-VT8" secondAttribute="leadingMargin" constant="3" id="d4c-r1-ebz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="qUl-Ev-x0e" secondAttribute="trailing" id="g7S-kw-lpF"/>
@@ -1240,7 +1223,6 @@
                             <constraint firstItem="M4t-Yu-rD8" firstAttribute="top" secondItem="M6E-NE-b2k" secondAttribute="bottom" constant="8" id="jfH-m2-0xV"/>
                             <constraint firstItem="XNO-iH-BaT" firstAttribute="top" secondItem="HwA-6v-GZ3" secondAttribute="bottom" constant="8" id="kol-it-yzk"/>
                             <constraint firstItem="NCk-fS-5P3" firstAttribute="top" secondItem="XNO-iH-BaT" secondAttribute="bottom" constant="8" id="oms-QE-pg5"/>
-                            <constraint firstItem="Bs3-Co-ect" firstAttribute="bottom" secondItem="N3c-ZK-8vd" secondAttribute="bottom" id="xVt-39-gif"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Ph1-CX-mo9" appends="YES" id="2Ui-qa-hg5"/>
@@ -1435,6 +1417,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="iEp-bA-V4R"/>
+        <segue reference="zDH-s4-QH3"/>
     </inferredMetricsTieBreakers>
 </document>

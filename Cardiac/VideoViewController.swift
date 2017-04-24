@@ -15,6 +15,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     let connectivityManager = ConnectivityManager.sharedInstance
     let bioHarness = BioHarness.sharedInstance
 
+    @IBOutlet weak var heartX: UIImageView!
     
     @IBOutlet var BHStatus: [UILabel]!
     
@@ -59,7 +60,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
         bioHarness.delegate = self
-                
+        bioHarness.connect()
+        
         setupCameraSession()
     }
     
@@ -84,6 +86,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
                 print(error)
             }
         }
+        bioHarness.disconnect()
     }
     
     // MARK: - Camera Setup
@@ -337,8 +340,12 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
                 print(error)
             }
         }
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode! + "Submit")
-        self.show(controller!, sender: self)
+        bioHarness.disconnect()
+        
+        DispatchQueue.main.async {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: self.directoryModel.phoneMode! + "Submit")
+            self.show(controller!, sender: self)
+        }
     }
 
 }
@@ -409,5 +416,10 @@ extension VideoViewController: BHDelegate {
             }
         }
         recordButton.isEnabled = enableRecord
+        if enableRecord {
+            heartX.alpha = 0.0
+        } else {
+            heartX.alpha = 1.0
+        }
     }
 }
