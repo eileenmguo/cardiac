@@ -61,12 +61,16 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         if directoryModel.phoneMode! == directoryModel.FACE {
             directoryModel.saveFaceTrailRound()
             if directoryModel.trialList.count < 4 {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
-                self.show(controller!, sender: self)
+                DispatchQueue.main.async {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
+                    self.show(controller!, sender: self)
+                }
             } else {
                 directoryModel.finishSubjectSession()
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
-                self.show(controller!, sender: self)
+                DispatchQueue.main.async {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+                    self.show(controller!, sender: self)
+                }
             }
         } else {
             let manualEntry = [
@@ -84,18 +88,30 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
             // need to update trialpostiion, startTime, endTime
             directoryModel.saveBodyTrialRound(manualEntryData: manualEntry)
             if directoryModel.trialList.count < 4 {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
-                self.show(controller!, sender: self)
+                DispatchQueue.main.async {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
+                    self.show(controller!, sender: self)
+                }
             } else {
                 directoryModel.finishSubjectSession()
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
-                self.show(controller!, sender: self)
+                DispatchQueue.main.async {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+                    self.show(controller!, sender: self)
+                }
             }
         }
     }
     
+    @IBAction func resetSwipe(_ sender: Any) {
+        connectivityManager.send(message: ["action": directoryModel.RESET_RND])
+        resetRound()
+    }
+    
     func resetRound() {
-        
+        DispatchQueue.main.async {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: self.directoryModel.phoneMode!)
+            self.show(controller!, sender: self)
+        }
     }
     
     func allFieldsCompleted() {
@@ -116,8 +132,7 @@ extension TrialEndViewController : ConnectivityManagerDelegate {
         case directoryModel.SUBMIT_RND:
             submit()
         case directoryModel.RESET_RND:
-            print("Trial End eventually implement reset round")
-        //reset round
+            resetRound()
         default:
             print("TrialEndViewController was unable to parse message")
         }

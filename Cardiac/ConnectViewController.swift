@@ -28,7 +28,6 @@ class ConnectViewController: UIViewController {
     
     override func  viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        print("CVC is disappearring")
     }
     
     override func didReceiveMemoryWarning() {

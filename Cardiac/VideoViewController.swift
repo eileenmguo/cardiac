@@ -59,9 +59,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
         bioHarness.delegate = self
-        
-        bioHarness.interpretStatusCode(firstByte: <#T##UInt8#>)
-        
+                
         setupCameraSession()
     }
     
@@ -379,25 +377,25 @@ extension VideoViewController: BHDelegate {
         for label in BHStatus {
             switch label.text! {
             case "HR":
-                if codes["heartRateReliable"] as! String == "No" {
+                if codes["heartRateReliable"] as! String == "Yes" {
+                    label.backgroundColor = UIColor.green
+                } else {
                     label.backgroundColor = UIColor.red
                     enableRecord = false
-                } else {
-                    label.backgroundColor = UIColor.green
                 }
             case "HRV":
-                if codes["heartRateVariabilityReliable"] as! String == "No" {
+                if codes["heartRateVariabilityReliable"] as! String == "Yes" {
+                    label.backgroundColor = UIColor.green
+                } else {
                     label.backgroundColor = UIColor.red
                     enableRecord = false
-                } else {
-                    label.backgroundColor = UIColor.green
                 }
             case "BR":
-                if codes["breatingRateReliable"] as! String == "No" {
+                if codes["breatingRateReliable"] as! String == "Yes" {
+                    label.backgroundColor = UIColor.green
+                } else {
                     label.backgroundColor = UIColor.red
                     enableRecord = false
-                } else {
-                    label.backgroundColor = UIColor.green
                 }
             case "DW":
                 if codes["deviceWornDetectionLevel"] as! String == "Full Confidence" {

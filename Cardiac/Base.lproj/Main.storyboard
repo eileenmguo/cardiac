@@ -1244,6 +1244,7 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Ph1-CX-mo9" appends="YES" id="2Ui-qa-hg5"/>
+                            <outletCollection property="gestureRecognizers" destination="94M-qA-hyu" appends="YES" id="W6X-7X-gtI"/>
                         </connections>
                     </view>
                     <connections>
@@ -1265,6 +1266,11 @@
                         <action selector="screenTapped:" destination="2kc-d5-06H" id="VEF-0x-MaK"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="right" numberOfTouchesRequired="3" id="94M-qA-hyu">
+                    <connections>
+                        <action selector="resetSwipe:" destination="2kc-d5-06H" id="Hi0-kg-Lka"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1902" y="1135"/>
         </scene>
@@ -1323,6 +1329,7 @@
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="OuJ-0a-zN1" firstAttribute="trailing" secondItem="LCV-Ae-fHe" secondAttribute="trailingMargin" id="0p6-K3-qGQ"/>
                             <constraint firstItem="SEe-0l-bsQ" firstAttribute="leading" secondItem="hMJ-4Y-pH5" secondAttribute="leading" id="1aY-7D-bbA"/>
@@ -1348,6 +1355,9 @@
                             <constraint firstAttribute="bottom" secondItem="aE7-oq-reB" secondAttribute="bottom" constant="20" symbolic="YES" id="xqC-cJ-qag"/>
                             <constraint firstItem="RNs-kC-Xwz" firstAttribute="leading" secondItem="OuJ-0a-zN1" secondAttribute="leading" id="y9w-tG-TyY"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="NBZ-Cb-pKC" appends="YES" id="8PK-5e-nPc"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="nextButton" destination="aE7-oq-reB" id="Z2a-0e-Cb8"/>
@@ -1355,6 +1365,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="osP-9b-zl6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" numberOfTouchesRequired="3" id="NBZ-Cb-pKC">
+                    <connections>
+                        <action selector="resetSwipe:" destination="Ooq-1Z-LWE" id="Rra-VK-Xt2"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1930" y="1135"/>
         </scene>
@@ -1420,6 +1435,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="zDH-s4-QH3"/>
+        <segue reference="iEp-bA-V4R"/>
     </inferredMetricsTieBreakers>
 </document>
