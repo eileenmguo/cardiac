@@ -39,9 +39,11 @@ class DirectoryModel {
     
     var videoFilePath: URL?
     var E4FilePath: URL?
-    var BHInfo: [String: Any]?
+    var BHFilePath: URL?
+    var BHCsvText: String = "heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
     
-    var subDirNum: Int = 0
+    
+//    var subDirNum: Int = 0
     
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
@@ -99,7 +101,7 @@ class DirectoryModel {
                     }
                 }
                 try FileManager.default.createDirectory(at: newURL, withIntermediateDirectories: false, attributes: nil)
-                self.subDirNum += 1
+//                self.subDirNum += 1
             } catch let error as NSError {
                 print(error.localizedDescription)
                 return (false, "Error creating/deleting directory")
@@ -116,7 +118,7 @@ class DirectoryModel {
             "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
             "faceCamFilePath": videoFilePath!.absoluteString,
-            "BHInfo": BHInfo!
+            "BHFilePath": BHFilePath!.absoluteString,
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
@@ -159,8 +161,24 @@ class DirectoryModel {
         return videoFilePath!
     }
     
+    func saveBHfile() {
+        let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + "BH"
+        var version = 0
+        repeat {
+            version += 1
+            self.BHFilePath = URL.init(fileURLWithPath: filePath + String(version) + ".csv", relativeTo: subjectDirectoryURL)
+        } while FileManager.default.fileExists(atPath: self.BHFilePath!.path)
+        do {
+            try BHCsvText.write(to: BHFilePath!, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            print("Failed to create BH csv file")
+            print("\(error)")
+        }
+    }
+    
     func resetModel() {
-        self.BHInfo = nil
+        self.BHFilePath = nil
+        self.BHCsvText = "heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
         self.videoFilePath = nil
         self.E4FilePath = nil
         self.subjectDirectoryURL = nil

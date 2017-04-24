@@ -92,7 +92,10 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
                 self.show(controller!, sender: self)
             }
         }
+    }
     
+    func resetRound() {
+        
     }
     
     func allFieldsCompleted() {

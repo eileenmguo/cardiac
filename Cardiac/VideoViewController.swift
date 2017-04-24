@@ -13,6 +13,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
+    let bioHarness = BioHarness.sharedInstance
 
     
     let WHITE_BALANCE_TEMP: Float = 4000.0
@@ -318,6 +319,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
             self.stopTimer()
             self.updateButtons(isRecording: false)
         }
+        directoryModel.saveBHfile()
     }
     
     func submit() {

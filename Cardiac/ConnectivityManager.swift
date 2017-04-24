@@ -33,14 +33,6 @@ class ConnectivityManager : NSObject {
         self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: deviceInfo, serviceType: directoryModel.SERVICE_TYPE)
         
         super.init()
-
-    }
-    
-    func startConnection() {
-        self.browser = MCNearbyServiceBrowser.init(peer: self.myPeerID, serviceType: directoryModel.SERVICE_TYPE)
-        let deviceInfo: [String:String] = ["subjectID": directoryModel.subjectData["subjectID"] as! String, "phoneMode": directoryModel.phoneMode!]
-        self.advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: deviceInfo, serviceType: directoryModel.SERVICE_TYPE)
-        
         
         self.advertiser.delegate = self
         self.advertiser.startAdvertisingPeer()
@@ -48,6 +40,7 @@ class ConnectivityManager : NSObject {
         self.browser.delegate = self;
         self.browser.startBrowsingForPeers()
     }
+
     
     deinit {
         self.advertiser.stopAdvertisingPeer()
@@ -94,12 +87,14 @@ extension ConnectivityManager : MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         NSLog("%@", "foundPeer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
-        if (info!["phoneMode"] != directoryModel.phoneMode && info!["subjectID"] == directoryModel.subjectData["subjectID"] as? String) {
-            print("inviting peer")
-            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
-        } else {
-            print("peer not matching")
-        }
+        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+//
+//        if (info!["phoneMode"] != directoryModel.phoneMode && info!["subjectID"] == directoryModel.subjectData["subjectID"] as? String) {
+//            print("inviting peer")
+//            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+//        } else {
+//            print("peer not matching")
+//        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

@@ -1315,7 +1315,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FaceCam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cardaic Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
                                 <rect key="frame" x="16" y="69" width="343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -1326,13 +1326,6 @@
                                 <state key="normal" title="Start"/>
                                 <connections>
                                     <action selector="onPress:" destination="hjv-9U-fFC" eventType="touchUpInside" id="12y-uv-Amj"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98q-nZ-uKz">
-                                <rect key="frame" x="35" y="64" width="41" height="30"/>
-                                <state key="normal" title="Home"/>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="m6e-xJ-eOw"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBx-n6-u8p">
@@ -1349,10 +1342,8 @@
                             <constraint firstItem="H4D-xr-CjH" firstAttribute="trailing" secondItem="zBx-n6-u8p" secondAttribute="trailing" constant="21" id="GZG-SV-NtD"/>
                             <constraint firstItem="H4D-xr-CjH" firstAttribute="trailing" secondItem="0Wh-k8-83Y" secondAttribute="trailing" id="QRZ-W1-6Pn"/>
                             <constraint firstItem="H4D-xr-CjH" firstAttribute="top" secondItem="rDz-Hy-VLF" secondAttribute="bottom" constant="49" id="XaL-VH-ibC"/>
-                            <constraint firstItem="98q-nZ-uKz" firstAttribute="top" secondItem="H4D-xr-CjH" secondAttribute="top" constant="-5" id="Zqy-Rf-5f9"/>
                             <constraint firstItem="zBx-n6-u8p" firstAttribute="leading" secondItem="uiQ-BL-bKf" secondAttribute="leadingMargin" constant="16" id="ddh-zE-ZVs"/>
                             <constraint firstItem="H4D-xr-CjH" firstAttribute="leading" secondItem="0Wh-k8-83Y" secondAttribute="leading" id="hTT-5Z-DsL"/>
-                            <constraint firstItem="98q-nZ-uKz" firstAttribute="leading" secondItem="uiQ-BL-bKf" secondAttribute="leadingMargin" constant="19" id="riX-RR-Rck"/>
                             <constraint firstItem="H4D-xr-CjH" firstAttribute="leading" secondItem="zBx-n6-u8p" secondAttribute="leading" constant="-16" id="vEw-4I-z7d"/>
                             <constraint firstAttribute="bottom" secondItem="0Wh-k8-83Y" secondAttribute="bottom" constant="20" symbolic="YES" id="zxD-p6-3rp"/>
                         </constraints>
@@ -1364,7 +1355,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yqq-be-YOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="32.799999999999997" y="1134.7826086956522"/>
+            <point key="canvasLocation" x="33" y="-702"/>
         </scene>
     </scenes>
     <resources>

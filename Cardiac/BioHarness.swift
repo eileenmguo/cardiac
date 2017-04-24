@@ -8,35 +8,42 @@
 import UIKit
 import CoreBluetooth
 
-class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
+    static let sharedInstance = BioHarness()
     let directoryModel = DirectoryModel.sharedInstance
     
     var zephyrConnected = false
+    
     
     var centralManager:CBCentralManager!
     var zephyr:CBPeripheral?
     var zephyrCharacteristic:CBCharacteristic?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init() {
+        super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        if zephyrConnected {
-            updateZephyrIcon()
-        }
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        if zephyrConnected {
+//            updateZephyrIcon()
+//        }
+//    }
     
-    @IBAction func handleConnectButtonTapped(_ sender: Any) {
+//    @IBAction func handleConnectButtonTapped(_ sender: Any) {
+//        connect()
+//    }
+//    
+//    @IBAction func handleDisconnectButtonTapped(_ sender: Any) {
+//        disconnect()
+//    }
+    
+    func connect() {
         let zUUID = CBUUID(string: BioHarnessDevice.ZephyrDeviceInfo)
         print("Scanning using Device Information UUID (0x180A ): \(zUUID)")
         centralManager.scanForPeripherals(withServices: [zUUID], options: nil)
-    }
-    
-    @IBAction func handleDisconnectButtonTapped(_ sender: Any) {
-        disconnect()
+        
     }
     
     func disconnect() {
@@ -49,14 +56,14 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
         zephyrCharacteristic = nil
     }
     
-    func updateZephyrIcon() {
-        if zephyrConnected {
-            
-        }
-        else {
-            
-        }
-    }
+//    func updateZephyrIcon() {
+//        if zephyrConnected {
+//            
+//        }
+//        else {
+//            
+//        }
+//    }
     
     func logZephyr(_ data:Data) {
         //dataArray for 8 bit values
@@ -81,7 +88,8 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
         dataDictionary["batteryLevel"] = dataArray8[14]
         dataDictionary["timestamp"] = time
         
-        directoryModel.BHInfo = dataDictionary
+        let newLine = "\(String(describing: dataDictionary["heartRate"])),\(String(describing: dataDictionary["heartRateConfidence"])),\(String(describing: dataDictionary["breathingRate"])),\(String(describing: dataDictionary["breathingRateConfidence"])),\(String(describing: dataDictionary["heartRateVariability"])),\(String(describing: dataDictionary["activityLevel"])),\(String(describing: dataDictionary["batteryLevel"])),\(String(describing: dataDictionary["timestamp"]))\n"
+        directoryModel.BHCsvText += newLine
     }
     
     func interpretStatusCode(firstByte: UInt8) -> Dictionary<String, Any> {
@@ -160,9 +168,12 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
             let alertController = UIAlertController(title: "Central Manager State", message: message, preferredStyle: UIAlertControllerStyle.alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil)
             alertController.addAction(okAction)
-            self.show(alertController, sender: self)
+//            return alertController
         }
+//        return nil
     }
+    
+    
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print("centralManager didDiscoverPeripheral - CBAdvertisementDataLocalNameKey is \"\(CBAdvertisementDataLocalNameKey)\"")
@@ -200,7 +211,7 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
             print("****** DISCONNECTION DETAILS: \(error!.localizedDescription)")
         }
         zephyr = nil
-        updateZephyrIcon()
+//        updateZephyrIcon()
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -227,7 +238,7 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
             for characteristic in characteristics {
                 zephyrCharacteristic = characteristic
                 zephyr?.setNotifyValue(true, for: characteristic)
-                updateZephyrIcon()
+//                updateZephyrIcon()
             }
         }
     }
@@ -242,3 +253,4 @@ class BioHarness: UIViewController, CBCentralManagerDelegate, CBPeripheralDelega
         }
     }
 }
+
