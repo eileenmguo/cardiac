@@ -60,7 +60,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
         bioHarness.delegate = self
-        bioHarness.connect()
+        
         
         setupCameraSession()
     }
@@ -71,6 +71,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         updateButtons(isRecording: false)
         
         view.layer.addSublayer(previewLayer)
+        bioHarness.connect()
+
         
         cameraSession.startRunning()
     }
@@ -129,7 +131,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
             configureCameraForHighestFrameRate(device: videoCaptureDevice)
             
             if directoryModel.subjectData["phoneMode"] as! String == directoryModel.BODY {
-                configureTorch(device: videoCaptureDevice, torchLevel: 0.7)
+                configureTorch(device: videoCaptureDevice, torchLevel: 0.1)
             }
             
             
@@ -348,6 +350,13 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         }
     }
 
+    @IBAction func changeBHConnection(_ sender: Any) {
+        if bioHarness.zephyrConnected {
+            bioHarness.disconnect()
+        } else {
+            bioHarness.connect()
+        }
+    }
 }
 
 extension VideoViewController: ConnectivityManagerDelegate {
@@ -395,7 +404,6 @@ extension VideoViewController: BHDelegate {
                     label.backgroundColor = UIColor.green
                 } else {
                     label.backgroundColor = UIColor.red
-                    enableRecord = false
                 }
             case "BR":
                 if codes["breatingRateReliable"] as! String == "Yes" {
@@ -416,10 +424,19 @@ extension VideoViewController: BHDelegate {
             }
         }
         recordButton.isEnabled = enableRecord
-        if enableRecord {
-            heartX.alpha = 0.0
+        DispatchQueue.main.async {
+            self.heartX.alpha = 0.0
+        }
+    }
+    func updateIcon(connected: Bool) {
+        if (connected) {
+            DispatchQueue.main.async {
+                self.heartX.alpha = 0.0
+            }
         } else {
-            heartX.alpha = 1.0
+            DispatchQueue.main.async {
+                self.heartX.alpha = 1.0
+            }
         }
     }
 }

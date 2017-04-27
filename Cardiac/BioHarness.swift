@@ -140,6 +140,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         } else {
             results["heartRateVariabilityReliable"] = "Yes"
         }
+        self.delegate?.updateStatusCodes(codes: results)
         return results
     }
     
@@ -209,7 +210,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             print("****** DISCONNECTION DETAILS: \(error!.localizedDescription)")
         }
         zephyr = nil
-//        updateZephyrIcon()
+        self.delegate?.updateIcon(connected: false);
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -236,7 +237,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             for characteristic in characteristics {
                 zephyrCharacteristic = characteristic
                 zephyr?.setNotifyValue(true, for: characteristic)
-//                updateZephyrIcon()
+                self.delegate?.updateIcon(connected: false)
             }
         }
     }
@@ -255,4 +256,5 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 protocol BHDelegate {
     func showAlert(alert:UIAlertController)
     func updateStatusCodes(codes: Dictionary<String, Any>)
+    func updateIcon(connected: Bool)
 }
