@@ -61,6 +61,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var Alcohol: UISegmentedControl!
     
     @IBOutlet weak var SubmitButton: UIButton!
+    @IBOutlet weak var submitActivityIndicator: UIActivityIndicatorView!
 
     
     @IBAction func screenTapped(_ sender: Any) {
@@ -92,6 +93,13 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         if e4.apiConnected {
             DispatchQueue.main.async {
                 self.authE4.isEnabled = false
+                self.connectE4.isEnabled = true
+            }
+            if e4.E4Connected {
+                DispatchQueue.main.async {
+                    self.connectE4.isEnabled = false
+                    self.watchIcon.alpha = 1.0
+                }
             }
         }
     }
@@ -103,7 +111,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
     func allFieldsCompleted() {
         if (self.restorationIdentifier != "faceCamStart") {
-            if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty) {
+            if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty || !e4.E4Connected) {
                 self.SubmitButton.isEnabled = false
             } else {
                 if (!initiationPhone.isEmpty) {
@@ -133,44 +141,45 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func submitStudyID(_ sender: Any) {
-        let failed = directoryModel.startFaceSession(subjectID: StudyID.text!)
-        if failed != nil {
-            print(failed!.error)
+    @IBAction func submitData(_ sender: Any) {
+        submitActivityIndicator.startAnimating()
+        if (self.restorationIdentifier != "faceCamStart") {
+            let failed = directoryModel.startFaceSession(subjectID: StudyID.text!)
+            if failed != nil {
+                print(failed!.error)
+            } else {
+                handleExperimentStart()
+            }
         } else {
-            handleExperimentStart()
-        }
-    }
-    
-    @IBAction func submitSurvey(_ sender: Any) {
-        let exercizes = ["bicycle": Bicycle.isOn, "calisthenics": Calisthenics.isOn, "jog": Jog.isOn, "liftWeights": LiftWeigts.isOn, "swim": Swim.isOn, "walk": Walk.isOn, "otherExercise": OtherExercise.isOn, "otherExerciseDescription": OtherExerciseDescription.text!] as [String : Any]
-        let race = ["black": Black.isOn, "americanIndian": AmericanIndian.isOn, "nativeHawaiian": NativeHawaiian.isOn, "white": White.isOn, "asian": Asian.isOn, "otherRace": OtherRace.isOn, "otherRaceDescription": OtherRaceDescription.text!] as [String : Any]
-        let demographicData = [
-            "subjectID": StudyID.text!,
-            "gender": Gender.titleForSegment(at: Gender.selectedSegmentIndex)!,
-            "age": Age.text!,
-            "height": [
-                "ft": HeightFt.text!,
-                "in": HeightIn.text!
-            ],
-            "weight": Weight.text!,
-            "dominantSide": DominantSide.titleForSegment(at: DominantSide.selectedSegmentIndex)!,
-            "heartCondition": HeartCondition.isOn,
-            "lungCondition": LungCondition.isOn,
-            "medication": Medication.isOn,
-            "activityAmount": Activity.titleForSegment(at: Activity.selectedSegmentIndex)!,
-            "activities": exercizes,
-            "ethnicity": Ethnicity.titleForSegment(at: Ethnicity.selectedSegmentIndex)!,
-            "race": race,
-            "smoking": Smoke.titleForSegment(at: Smoke.selectedSegmentIndex)!,
-            "alcoholConsumption": Alcohol.titleForSegment(at: Alcohol.selectedSegmentIndex)!
-        ] as [String : Any]
-        print(demographicData)
-        let failed = directoryModel.startBodySession(demographicData: demographicData)
-        if failed != nil {
-            print(failed!.error)
-        } else {
-            handleExperimentStart()
+            let exercizes = ["bicycle": Bicycle.isOn, "calisthenics": Calisthenics.isOn, "jog": Jog.isOn, "liftWeights": LiftWeigts.isOn, "swim": Swim.isOn, "walk": Walk.isOn, "otherExercise": OtherExercise.isOn, "otherExerciseDescription": OtherExerciseDescription.text!] as [String : Any]
+            let race = ["black": Black.isOn, "americanIndian": AmericanIndian.isOn, "nativeHawaiian": NativeHawaiian.isOn, "white": White.isOn, "asian": Asian.isOn, "otherRace": OtherRace.isOn, "otherRaceDescription": OtherRaceDescription.text!] as [String : Any]
+            let demographicData = [
+                "subjectID": StudyID.text!,
+                "gender": Gender.titleForSegment(at: Gender.selectedSegmentIndex)!,
+                "age": Age.text!,
+                "height": [
+                    "ft": HeightFt.text!,
+                    "in": HeightIn.text!
+                ],
+                "weight": Weight.text!,
+                "dominantSide": DominantSide.titleForSegment(at: DominantSide.selectedSegmentIndex)!,
+                "heartCondition": HeartCondition.isOn,
+                "lungCondition": LungCondition.isOn,
+                "medication": Medication.isOn,
+                "activityAmount": Activity.titleForSegment(at: Activity.selectedSegmentIndex)!,
+                "activities": exercizes,
+                "ethnicity": Ethnicity.titleForSegment(at: Ethnicity.selectedSegmentIndex)!,
+                "race": race,
+                "smoking": Smoke.titleForSegment(at: Smoke.selectedSegmentIndex)!,
+                "alcoholConsumption": Alcohol.titleForSegment(at: Alcohol.selectedSegmentIndex)!
+                ] as [String : Any]
+            print(demographicData)
+            let failed = directoryModel.startBodySession(demographicData: demographicData)
+            if failed != nil {
+                print(failed!.error)
+            } else {
+                handleExperimentStart()
+            }
         }
     }
     
@@ -228,6 +237,7 @@ extension StartStudyViewController: E4ControllerDelegate, E4ConnectDelegate {
     func updateIcon(connected: Bool) {
         if (connected) {
             DispatchQueue.main.async {
+                self.connectE4.isEnabled = false
                 self.watchIcon.alpha = 1.0
                 self.connectActivityIndicator.stopAnimating()
             }

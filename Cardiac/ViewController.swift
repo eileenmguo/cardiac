@@ -11,12 +11,20 @@ import UIKit
 class ViewController: UIViewController {
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
+    let bioHarness = BioHarness.sharedInstance
+    let e4 = E4Controller.sharedInstance
     
     let CHOOSE_MODE = "chooseCam"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         connectivityManager.delegate = self
+        if bioHarness.zephyrConnected {
+            bioHarness.disconnect()
+        }
+        if e4.E4Connected{
+            e4.disconnect()
+        }
         // Do any additional setup after loading the view, typically from a nib.
     }
 

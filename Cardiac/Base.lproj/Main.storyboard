@@ -20,7 +20,7 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1700"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R40-fJ-ibW">
@@ -74,7 +74,7 @@
                                 <rect key="frame" x="16" y="617" width="343" height="30"/>
                                 <state key="normal" title="Submit Study ID"/>
                                 <connections>
-                                    <action selector="submitStudyID:" destination="O3h-YL-h6Q" eventType="touchUpInside" id="t65-FE-iJb"/>
+                                    <action selector="submitData:" destination="O3h-YL-h6Q" eventType="touchUpInside" id="xNR-mq-jIL"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YFy-aV-6y3">
@@ -106,6 +106,10 @@
                             </activityIndicatorView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AJO-qW-9gp">
                                 <rect key="frame" x="315" y="248" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="EZf-Ig-mt5">
+                                <rect key="frame" x="252" y="622" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WatchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="vVf-aN-gbh">
                                 <rect key="frame" x="313" y="246" width="25" height="25"/>
@@ -151,6 +155,7 @@
                         <outlet property="authE4" destination="Ev8-EO-4KT" id="HdF-DS-zYC"/>
                         <outlet property="connectActivityIndicator" destination="AJO-qW-9gp" id="Lv3-Td-oYh"/>
                         <outlet property="connectE4" destination="x71-pS-Fxt" id="ICu-eY-cdh"/>
+                        <outlet property="submitActivityIndicator" destination="EZf-Ig-mt5" id="VKr-a3-H2g"/>
                         <outlet property="watchIcon" destination="vVf-aN-gbh" id="vkP-tc-3fQ"/>
                     </connections>
                 </viewController>
@@ -688,7 +693,7 @@
                                         </constraints>
                                         <state key="normal" title="Submit Survey"/>
                                         <connections>
-                                            <action selector="submitSurvey:" destination="Sci-em-XM1" eventType="touchUpInside" id="sWv-WF-d80"/>
+                                            <action selector="submitData:" destination="Sci-em-XM1" eventType="touchUpInside" id="82L-RJ-vuK"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="paX-pS-ebu">
@@ -698,6 +703,10 @@
                                             <segue destination="BYZ-38-t0r" kind="show" id="KLb-cV-hfl"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="SMK-Pt-qjl">
+                                        <rect key="frame" x="254" y="1655" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -932,6 +941,7 @@
                         <outlet property="Walk" destination="a2u-jA-vJ3" id="0y4-Tq-7cq"/>
                         <outlet property="Weight" destination="OGt-Xk-dkb" id="il2-Gb-wSx"/>
                         <outlet property="White" destination="7Kl-nE-swl" id="MBR-6O-CW4"/>
+                        <outlet property="submitActivityIndicator" destination="SMK-Pt-qjl" id="sbz-Xy-Oke"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bBR-pl-xOQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1422,7 +1432,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cardaic Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cardiac Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4D-xr-CjH">
                                 <rect key="frame" x="16" y="69" width="343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -1435,7 +1445,7 @@
                                     <action selector="onPress:" destination="hjv-9U-fFC" eventType="touchUpInside" id="12y-uv-Amj"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBx-n6-u8p">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connections: []" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBx-n6-u8p">
                                 <rect key="frame" x="32" y="161" width="306" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -1472,6 +1482,6 @@
         <image name="XIcon" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4zu-de-DQh"/>
+        <segue reference="KLb-cV-hfl"/>
     </inferredMetricsTieBreakers>
 </document>
