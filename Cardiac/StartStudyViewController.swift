@@ -13,7 +13,17 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
+    let bioHarness = BioHarness.sharedInstance
+    let e4 = E4Controller.sharedInstance
     var initiationPhone = [String: String]()
+    let INITIATE_EXP = "initiateExperiment"
+    let START_EXP = "startExperiment"
+    
+    @IBOutlet weak var connectE4: UIButton!
+    @IBOutlet weak var authE4: UIButton!
+    @IBOutlet weak var watchIcon: UIImageView!
+    @IBOutlet weak var authActivityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var connectActivityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var StudyID: UITextField!
     @IBOutlet weak var Gender: UISegmentedControl!
@@ -51,25 +61,44 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var Alcohol: UISegmentedControl!
     
     @IBOutlet weak var SubmitButton: UIButton!
+
     
     @IBAction func screenTapped(_ sender: Any) {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
         allFieldsCompleted()
     }
 
+    @IBAction func onAuthE4(_ sender: Any) {
+        self.authE4.isEnabled = false
+        e4.authenticate()
+        authActivityIndicator.startAnimating()
+    }
+    @IBAction func onConnectE4(_ sender: Any) {
+        e4.connect()
+        connectActivityIndicator.startAnimating()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         connectivityManager.delegate = self
-        // Do any additional setup after loading the view, typically from a nib.
-    
+        e4.delegate = self
+        e4.connectDelegate = self
+        
+        if self.restorationIdentifier == "bodyCamStart" {
+            bioHarness.connect()
+        }
+        
+        if e4.apiConnected {
+            DispatchQueue.main.async {
+                self.authE4.isEnabled = false
+            }
+        }
     }
 
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func allFieldsCompleted() {
@@ -120,7 +149,10 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
             "subjectID": StudyID.text!,
             "gender": Gender.titleForSegment(at: Gender.selectedSegmentIndex)!,
             "age": Age.text!,
-            "height": HeightFt.text! + " ft " + HeightIn.text! + " in",
+            "height": [
+                "ft": HeightFt.text!,
+                "in": HeightIn.text!
+            ],
             "weight": Weight.text!,
             "dominantSide": DominantSide.titleForSegment(at: DominantSide.selectedSegmentIndex)!,
             "heartCondition": HeartCondition.isOn,
@@ -151,10 +183,10 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
     func handleExperimentStart() {
         if (!initiationPhone.isEmpty) {
-            connectivityManager.send(message: ["action": directoryModel.START_EXP])
+            connectivityManager.send(message: ["action": START_EXP])
             startExperiment()
         } else {
-            connectivityManager.send(message: ["action": directoryModel.INITIATE_EXP, "subjectID": StudyID.text!])
+            connectivityManager.send(message: ["action": INITIATE_EXP, "subjectID": StudyID.text!])
             self.SubmitButton.isEnabled = false
         }
     }
@@ -177,9 +209,9 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
 extension StartStudyViewController: ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
-        case directoryModel.INITIATE_EXP:
+        case INITIATE_EXP:
             handleExperimentInitiation(subjectID: message["subjectID"] as! String)
-        case directoryModel.START_EXP:
+        case START_EXP:
             startExperiment()
             print("StartStudyViewController: Starting experiment")
         default:
@@ -189,5 +221,35 @@ extension StartStudyViewController: ConnectivityManagerDelegate {
     
     func connectedDevicesChanged(manager: ConnectivityManager, connectedDevices: [String]) {
         print("Connections: \(connectedDevices)")
+    }
+}
+
+extension StartStudyViewController: E4ControllerDelegate, E4ConnectDelegate {
+    func updateIcon(connected: Bool) {
+        if (connected) {
+            DispatchQueue.main.async {
+                self.watchIcon.alpha = 1.0
+                self.connectActivityIndicator.stopAnimating()
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.watchIcon.alpha = 0.0
+                self.connectActivityIndicator.stopAnimating()
+            }
+        }
+    }
+    func authSuccess(authenticated: Bool) {
+        if authenticated {
+            DispatchQueue.main.async {
+                self.connectE4.isEnabled = true
+                self.authActivityIndicator.stopAnimating()
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.connectE4.isEnabled = false
+                self.authE4.isEnabled = true
+                self.authActivityIndicator.stopAnimating()
+            }
+        }
     }
 }

@@ -13,16 +13,22 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
+    let bioHarness = BioHarness.sharedInstance
+    let e4 = E4Controller.sharedInstance
 
+    let SUBMIT_RND = "submitRound"
+    let RESET_RND = "resetRound"
 
     @IBOutlet weak var CardioBuddyBPM: UITextField!
     @IBOutlet weak var PulseOxSp02: UITextField!
     @IBOutlet weak var PulseOxBPM: UITextField!
-    @IBOutlet weak var bloodPressureGT: UITextField!
     @IBOutlet weak var iCareBloodViscosity: UITextField!
     @IBOutlet weak var iCarePulseOx: UITextField!
     @IBOutlet weak var iCareBPM: UITextField!
-    @IBOutlet weak var iCareBloodPressure: UITextField!
+    @IBOutlet weak var iCareBPSystolic: UITextField!
+    @IBOutlet weak var iCareBPDiastolic: UITextField!
+    @IBOutlet weak var groundTruthBPSystolic: UITextField!
+    @IBOutlet weak var groundTruthBPDiastolic: UITextField!
     
     @IBAction func screenTapped(_ sender: Any) {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
@@ -35,7 +41,7 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
 
     @IBAction func submitRound(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.SUBMIT_RND])
+        connectivityManager.send(message: ["action": SUBMIT_RND])
         submit()
     }
     
@@ -76,12 +82,18 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
             let manualEntry = [
                 "cardioBuddyBPM": CardioBuddyBPM.text!,
                 "pulseOx": ["sp02": PulseOxSp02.text!, "bpm": PulseOxBPM.text!],
-                "bloodPressure": bloodPressureGT.text!,
+                "bloodPressure": [
+                    "systolic": groundTruthBPSystolic.text!,
+                    "diastolic": groundTruthBPDiastolic.text!
+                ],
                 "iCare": [
                     "bloodViscosity": iCareBloodViscosity.text!,
                     "pulseOx": iCarePulseOx.text!,
                     "bpm": iCareBPM.text!,
-                    "bloodPressure": iCareBloodPressure.text!
+                    "bloodPressure": [
+                        "systolic": iCareBPSystolic.text!,
+                        "diastolic": iCareBPDiastolic.text!
+                    ],
                 ]
                 ]  as [String : Any]
             
@@ -94,6 +106,8 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
                 }
             } else {
                 directoryModel.finishSubjectSession()
+                bioHarness.disconnect()
+                e4.disconnect()
                 DispatchQueue.main.async {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
                     self.show(controller!, sender: self)
@@ -103,7 +117,7 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func resetSwipe(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.RESET_RND])
+        connectivityManager.send(message: ["action": RESET_RND])
         resetRound()
     }
     
@@ -116,7 +130,7 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
     func allFieldsCompleted() {
         if (self.restorationIdentifier == "bodyCamSubmit") {
-            if (CardioBuddyBPM.text!.isEmpty || PulseOxBPM.text!.isEmpty || PulseOxSp02.text!.isEmpty || bloodPressureGT.text!.isEmpty || iCareBPM.text!.isEmpty || iCarePulseOx.text!.isEmpty || iCareBloodPressure.text!.isEmpty || iCareBloodViscosity.text!.isEmpty) {
+            if (CardioBuddyBPM.text!.isEmpty || PulseOxBPM.text!.isEmpty || PulseOxSp02.text!.isEmpty || groundTruthBPSystolic.text!.isEmpty || groundTruthBPDiastolic.text!.isEmpty || iCareBPM.text!.isEmpty || iCarePulseOx.text!.isEmpty || iCareBPSystolic.text!.isEmpty || iCareBPDiastolic.text!.isEmpty || iCareBloodViscosity.text!.isEmpty) {
                 self.nextButton.isEnabled = false
             } else {
                 self.nextButton.isEnabled = true
@@ -129,9 +143,9 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
 extension TrialEndViewController : ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
-        case directoryModel.SUBMIT_RND:
+        case SUBMIT_RND:
             submit()
-        case directoryModel.RESET_RND:
+        case RESET_RND:
             resetRound()
         default:
             print("TrialEndViewController was unable to parse message")

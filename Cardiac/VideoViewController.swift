@@ -14,8 +14,14 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     let bioHarness = BioHarness.sharedInstance
+    let e4 = E4Controller.sharedInstance
+    
+    let START_VID = "startVideo"
+    let STOP_VID = "stopVideo"
+    let SUBMIT_VID = "submitVideo"
+    let RESET_RND = "resetRound"
 
-    @IBOutlet weak var heartX: UIImageView!
+    @IBOutlet weak var xIcon: UIImageView!
     
     @IBOutlet var BHStatus: [UILabel]!
     
@@ -60,6 +66,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
         bioHarness.delegate = self
+        e4.delegate = self
         
         
         setupCameraSession()
@@ -71,7 +78,7 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         updateButtons(isRecording: false)
         
         view.layer.addSublayer(previewLayer)
-        bioHarness.connect()
+//        bioHarness.connect()
 
         
         cameraSession.startRunning()
@@ -237,17 +244,17 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     // MARK: - Actions
     @IBAction func submitVideo(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.SUBMIT_VID])
+        connectivityManager.send(message: ["action": SUBMIT_VID])
         submit()
     }
     
     @IBAction func pushRecord(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.START_VID])
+        connectivityManager.send(message: ["action": START_VID])
         startVideoRecording()
     }
     
     @IBAction func pushStop(_ sender: Any) {
-        connectivityManager.send(message: ["action": directoryModel.STOP_VID])
+        connectivityManager.send(message: ["action": STOP_VID])
         stopVideoRecording()
     }
     
@@ -328,7 +335,6 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
             self.stopTimer()
             self.updateButtons(isRecording: false)
         }
-        directoryModel.saveBHfile()
     }
     
     func submit() {
@@ -342,36 +348,46 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
                 print(error)
             }
         }
-        bioHarness.disconnect()
+//        bioHarness.disconnect()
         
         DispatchQueue.main.async {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: self.directoryModel.phoneMode! + "Submit")
             self.show(controller!, sender: self)
         }
     }
-
-    @IBAction func changeBHConnection(_ sender: Any) {
-        if bioHarness.zephyrConnected {
-            bioHarness.disconnect()
+    
+    
+    @IBAction func toggleDeviceConnection(_ sender: Any) {
+        if directoryModel.phoneMode == directoryModel.FACE {
+            if e4.E4Connected {
+                e4.disconnect()
+            } else {
+                e4.connect()
+            }
         } else {
-            bioHarness.connect()
+            if bioHarness.zephyrConnected {
+                bioHarness.disconnect()
+            } else {
+                bioHarness.connect()
+            }
         }
     }
+    
 }
 
 extension VideoViewController: ConnectivityManagerDelegate {
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
-        case directoryModel.START_VID:
+        case START_VID:
             print("VideoViewController: Starting Video")
             startVideoRecording()
-        case directoryModel.STOP_VID:
+        case STOP_VID:
             stopVideoRecording()
             print("VideoViewController: Stopping video")
-        case directoryModel.SUBMIT_VID:
+        case SUBMIT_VID:
             submit()
             print("VideoViewController: Submitting video")
-        case directoryModel.RESET_RND:
+        case RESET_RND:
             print("VideoViewController: Resetting Round")
         //reset round
         default:
@@ -384,7 +400,7 @@ extension VideoViewController: ConnectivityManagerDelegate {
     }
 }
 
-extension VideoViewController: BHDelegate {
+extension VideoViewController: BHDelegate, E4ControllerDelegate {
     func showAlert(alert: UIAlertController) {
         self.present(alert, animated: true, completion: nil)
     }
@@ -425,18 +441,20 @@ extension VideoViewController: BHDelegate {
         }
         recordButton.isEnabled = enableRecord
         DispatchQueue.main.async {
-            self.heartX.alpha = 0.0
+            self.xIcon.alpha = 0.0
         }
     }
     func updateIcon(connected: Bool) {
         if (connected) {
             DispatchQueue.main.async {
-                self.heartX.alpha = 0.0
+                self.xIcon.alpha = 0.0
             }
         } else {
             DispatchQueue.main.async {
-                self.heartX.alpha = 1.0
+                self.xIcon.alpha = 1.0
             }
         }
     }
 }
+
+

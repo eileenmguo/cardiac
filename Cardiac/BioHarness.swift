@@ -24,20 +24,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        if zephyrConnected {
-//            updateZephyrIcon()
-//        }
-//    }
-    
-//    @IBAction func handleConnectButtonTapped(_ sender: Any) {
-//        connect()
-//    }
-//    
-//    @IBAction func handleDisconnectButtonTapped(_ sender: Any) {
-//        disconnect()
-//    }
+
     
     func connect() {
         let zUUID = CBUUID(string: BioHarnessDevice.ZephyrDeviceInfo)
@@ -55,15 +42,6 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
         zephyrCharacteristic = nil
     }
-    
-//    func updateZephyrIcon() {
-//        if zephyrConnected {
-//            
-//        }
-//        else {
-//            
-//        }
-//    }
     
     func logZephyr(_ data:Data) {
         //dataArray for 8 bit values
@@ -88,7 +66,7 @@ class BioHarness: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         dataDictionary["batteryLevel"] = dataArray8[14]
         dataDictionary["timestamp"] = time
         
-        let newLine = "\(String(describing: dataDictionary["heartRate"])),\(String(describing: dataDictionary["heartRateConfidence"])),\(String(describing: dataDictionary["breathingRate"])),\(String(describing: dataDictionary["breathingRateConfidence"])),\(String(describing: dataDictionary["heartRateVariability"])),\(String(describing: dataDictionary["activityLevel"])),\(String(describing: dataDictionary["batteryLevel"])),\(String(describing: dataDictionary["timestamp"]))\n"
+        let newLine = "\(String(describing: dataDictionary["heartRate"]!)),\(String(describing: dataDictionary["heartRateConfidence"]!)),\(String(describing: dataDictionary["breathingRate"]!)),\(String(describing: dataDictionary["breathingRateConfidence"]!)),\(String(describing: dataDictionary["heartRateVariability"]!)),\(String(describing: dataDictionary["activityLevel"]!)),\(String(describing: dataDictionary["batteryLevel"]!)),\(String(describing: dataDictionary["timestamp"]!))\n"
         directoryModel.BHCsvText += newLine
     }
     

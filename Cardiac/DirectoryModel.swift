@@ -13,15 +13,6 @@ class DirectoryModel {
     let BODY: String = "bodyCam"
     let POSITIONS: [String] = ["supine", "sitting", "sevens", "standing"]
     
-    // Actions for connectivityManager delegates to listen for
-    let INITIATE_EXP = "initiateExperiment"
-    let START_EXP = "startExperiment"
-    let START_VID = "startVideo"
-    let STOP_VID = "stopVideo"
-    let SUBMIT_VID = "submitVideo"
-    let SUBMIT_RND = "submitRound"
-    let RESET_RND = "resetRound"
-    
     // For Connectivity manager
     let SERVICE_TYPE = "cardiac"
     
@@ -41,10 +32,9 @@ class DirectoryModel {
     var videoFilePath: URL?
     var E4FilePath: URL?
     var BHFilePath: URL?
-    var BHCsvText: String = "heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+    var BHCsvText: String = "heartRate,heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+    var E4CsvText: String = "timestamp,type,value\n"
     
-    
-//    var subDirNum: Int = 0
     
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
@@ -55,12 +45,6 @@ class DirectoryModel {
             if directoryContents.count == 0 {
                 try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
             }
-//            else {
-//                try FileManager.default.removeItem(at: rootDirectoryURL)
-//                self.rootDirectoryURL.appendPathExtension("+")
-//                print(rootDirectoryURL.absoluteString)
-//                try FileManager.default.createDirectory(at: rootDirectoryURL, withIntermediateDirectories: true, attributes: nil)
-//            }
         } catch let error as NSError {
             print(error.localizedDescription)
         }
@@ -114,24 +98,25 @@ class DirectoryModel {
     
     // Saving data from each round (sevens, sitting, standing, etc.) to the trial list
     func saveFaceTrailRound() {
+        self.saveE4File()
         let tempDictionary = [
             "startTime": trialStartTime!,
             "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
             "faceCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
-            "BHFilePath": BHFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
+            "E4FilePath": E4FilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
         ] as [String : Any]
         self.trialList.append(tempDictionary)
     }
     
     func saveBodyTrialRound(manualEntryData manualData: [String:Any]) {
+        self.saveBHfile()
         let tempDictionary = [
             "startTime": trialStartTime!,
             "endTime": trialEndTime!,
             "positionType": POSITIONS[trialList.count],
             "bodyCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
-//            "E4FilePath": E4FilePath!.absoluteString,
-            "E4FilePath": "E3filepath",
+            "BHFilePath": BHFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
             "manualEntry": manualData
         ] as [String : Any]
         self.trialList.append(tempDictionary)
@@ -141,7 +126,9 @@ class DirectoryModel {
     //Saving Subject's MetadataFile
     func finishSubjectSession() {
         subjectData["trailList"] = trialList
-        let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
+        let fileName = String(describing: subjectData["subjectID"]!) + phoneMode! + "MetaData.json"
+        let filePath = URL.init(fileURLWithPath: fileName, relativeTo: subjectDirectoryURL)
+//        let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
         do {
             let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
             FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
@@ -175,11 +162,34 @@ class DirectoryModel {
             print("Failed to create BH csv file")
             print("\(error)")
         }
+        self.BHCsvText = "heartRate,heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+    }
+    
+    func saveE4File() {
+        let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + "E4"
+        var version = 0
+        repeat {
+            version += 1
+            self.E4FilePath = URL.init(fileURLWithPath: filePath + String(version) + ".csv", relativeTo: subjectDirectoryURL)
+        } while FileManager.default.fileExists(atPath: self.E4FilePath!.path)
+        do {
+            try E4CsvText.write(to: E4FilePath!, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            print("Failed to create E4 csv file")
+            print("\(error)")
+        }
+        self.E4CsvText = "timestamp,type,value\n"
+    }
+    
+    func resetCsvText() {
+        self.BHCsvText = "heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+        self.E4CsvText = "timestamp,type,value\n"
     }
     
     func resetModel() {
         self.BHFilePath = nil
-        self.BHCsvText = "heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+        self.BHCsvText = "heartrate,heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
+        self.E4CsvText = "timestamp,type,value\n"
         self.videoFilePath = nil
         self.E4FilePath = nil
         self.subjectDirectoryURL = nil
