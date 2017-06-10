@@ -11,17 +11,20 @@ import UIKit
 
 class TrialEndViewController: UIViewController, UITextFieldDelegate {
     
+    // Accessing singleton classes
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     let bioHarness = BioHarness.sharedInstance
     let e4 = E4Controller.sharedInstance
 
+    // Available shared actions
     let SUBMIT_RND = "submitRound"
     let RESET_RND = "resetRound"
+    let GO_HOME = "goToHomeScreen"
 
-    @IBOutlet weak var CardioBuddyBPM: UITextField!
-    @IBOutlet weak var PulseOxSp02: UITextField!
-    @IBOutlet weak var PulseOxBPM: UITextField!
+    @IBOutlet weak var cardioBuddyBPM: UITextField!
+    @IBOutlet weak var pulseOxSp02: UITextField!
+    @IBOutlet weak var pulseOxBPM: UITextField!
     @IBOutlet weak var iCareBloodViscosity: UITextField!
     @IBOutlet weak var iCarePulseOx: UITextField!
     @IBOutlet weak var iCareBPM: UITextField!
@@ -30,9 +33,49 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var groundTruthBPSystolic: UITextField!
     @IBOutlet weak var groundTruthBPDiastolic: UITextField!
     
+    enum TextField: Int {
+        case cbBPM, poSp02, poBPM, icBloodViscosity, icPO, icBPM, icBPS, icBPD, gtBPS, gtBPD
+    }
+    
     @IBAction func screenTapped(_ sender: Any) {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil);
         allFieldsCompleted()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        connectivityManager.delegate = self
+        
+        if (self.restorationIdentifier == "bodyCamSubmit") {
+            cardioBuddyBPM.delegate = self
+            pulseOxSp02.delegate = self
+            pulseOxBPM.delegate = self
+            iCareBloodViscosity.delegate = self
+            iCarePulseOx.delegate = self
+            iCareBPM.delegate = self
+            iCareBPDiastolic.delegate = self
+            iCareBPSystolic.delegate = self
+            groundTruthBPSystolic.delegate = self
+            groundTruthBPDiastolic.delegate = self
+        }
+
+        // Checking if this is the last trial round and updates UI elements accordingly
+        if directoryModel.trialList.count < 3 {
+            self.roundDesc.text = directoryModel.POSITIONS[directoryModel.trialList.count] + " round is complete!"
+            if (self.restorationIdentifier == "bodyCamSubmit") {
+                self.nextButton.setTitle("Next Round", for: UIControlState.normal)
+            }
+        } else {
+            self.roundDesc.text = "Study is complete!"
+            if (self.restorationIdentifier == "bodyCamSubmit") {
+                self.nextButton.setTitle("Finish", for: UIControlState.normal)
+            }
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     
@@ -45,28 +88,22 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         submit()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        connectivityManager.delegate = self
-        
-        if directoryModel.trialList.count < 3 {
-            self.roundDesc.text = directoryModel.POSITIONS[directoryModel.trialList.count] + " round is complete!"
-            self.nextButton.setTitle("Next Round", for: UIControlState.normal)
-        } else {
-            self.roundDesc.text = "Study is complete!"
-            self.nextButton.setTitle("Finish", for: UIControlState.normal)
-        }
+    @IBAction func onClickHome(_ sender: Any) {
+        connectivityManager.send(message: ["action": GO_HOME])
+        goHome()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.becomeFirstResponder()
     }
     
     func submit() {
+        // Submission if in faceCam mode
         if directoryModel.phoneMode! == directoryModel.FACE {
             directoryModel.saveFaceTrailRound()
+            // Determining navigation (home or next trial position)
             if directoryModel.trialList.count < 4 {
+                directoryModel.saveMetaData()
                 DispatchQueue.main.async {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "faceCam")
                     self.show(controller!, sender: self)
@@ -79,9 +116,10 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         } else {
+            // Submission if in bodyCam mode
             let manualEntry = [
-                "cardioBuddyBPM": CardioBuddyBPM.text!,
-                "pulseOx": ["sp02": PulseOxSp02.text!, "bpm": PulseOxBPM.text!],
+                "cardioBuddyBPM": cardioBuddyBPM.text!,
+                "pulseOx": ["sp02": pulseOxSp02.text!, "bpm": pulseOxBPM.text!],
                 "bloodPressure": [
                     "systolic": groundTruthBPSystolic.text!,
                     "diastolic": groundTruthBPDiastolic.text!
@@ -97,9 +135,10 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
                 ]
                 ]  as [String : Any]
             
-            // need to update trialpostiion, startTime, endTime
+            // Determining navigation (home or next trial position)
             directoryModel.saveBodyTrialRound(manualEntryData: manualEntry)
             if directoryModel.trialList.count < 4 {
+                directoryModel.saveMetaData()
                 DispatchQueue.main.async {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "bodyCam")
                     self.show(controller!, sender: self)
@@ -116,11 +155,13 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Swipe to reset current trial round
     @IBAction func resetSwipe(_ sender: Any) {
         connectivityManager.send(message: ["action": RESET_RND])
         resetRound()
     }
     
+    // Returns to the videoController screen for the current trial round
     func resetRound() {
         DispatchQueue.main.async {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: self.directoryModel.phoneMode!)
@@ -128,25 +169,37 @@ class TrialEndViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Checks that all fields are completed before enabling submit button
     func allFieldsCompleted() {
         if (self.restorationIdentifier == "bodyCamSubmit") {
-            if (CardioBuddyBPM.text!.isEmpty || PulseOxBPM.text!.isEmpty || PulseOxSp02.text!.isEmpty || groundTruthBPSystolic.text!.isEmpty || groundTruthBPDiastolic.text!.isEmpty || iCareBPM.text!.isEmpty || iCarePulseOx.text!.isEmpty || iCareBPSystolic.text!.isEmpty || iCareBPDiastolic.text!.isEmpty || iCareBloodViscosity.text!.isEmpty) {
+            if (cardioBuddyBPM.text!.isEmpty || pulseOxBPM.text!.isEmpty || pulseOxSp02.text!.isEmpty || groundTruthBPSystolic.text!.isEmpty || groundTruthBPDiastolic.text!.isEmpty || iCareBPM.text!.isEmpty || iCarePulseOx.text!.isEmpty || iCareBPSystolic.text!.isEmpty || iCareBPDiastolic.text!.isEmpty || iCareBloodViscosity.text!.isEmpty) {
                 self.nextButton.isEnabled = false
             } else {
                 self.nextButton.isEnabled = true
             }
         }
     }
+    
+    func goHome() {
+        DispatchQueue.main.async {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+            self.show(controller!, sender: self)
+        }
+    }
 }
 
 
 extension TrialEndViewController : ConnectivityManagerDelegate {
+    
+    // Parsing message recieved from other phone
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
         case SUBMIT_RND:
             submit()
         case RESET_RND:
             resetRound()
+        case GO_HOME:
+            goHome()
         default:
             print("TrialEndViewController was unable to parse message")
         }

@@ -11,13 +11,17 @@ import UIKit
 
 class StartStudyViewController: UIViewController, UITextFieldDelegate {
     
+    // Accessing singleton classes
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     let bioHarness = BioHarness.sharedInstance
     let e4 = E4Controller.sharedInstance
     var initiationPhone = [String: String]()
+    
+    // Available Actions for this view controller to send to paired iPhone
     let INITIATE_EXP = "initiateExperiment"
     let START_EXP = "startExperiment"
+    let GO_HOME = "goToHomeScreen"
     
     @IBOutlet weak var connectE4: UIButton!
     @IBOutlet weak var authE4: UIButton!
@@ -79,6 +83,15 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         connectActivityIndicator.startAnimating()
     }
     
+    @IBAction func onClickHome(_ sender: Any) {
+        connectivityManager.send(message: ["action": GO_HOME])
+        goHome()
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.becomeFirstResponder()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,10 +99,12 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         e4.delegate = self
         e4.connectDelegate = self
         
+        // Automatically connecting to BioHarness if in bodyCam mode
         if self.restorationIdentifier == "bodyCamStart" {
             bioHarness.connect()
         }
         
+        // Updating api connection
         if e4.apiConnected {
             DispatchQueue.main.async {
                 self.authE4.isEnabled = false
@@ -109,12 +124,14 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
     }
     
+    // Checking to see if all fields are completed
+    // Disables submit button to wait for the other phone to also press submit
     func allFieldsCompleted() {
         if (self.restorationIdentifier != "faceCamStart") {
-            if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty || !e4.E4Connected) {
+            if (StudyID.text!.isEmpty || Age.text!.isEmpty || HeightFt.text!.isEmpty || HeightIn.text!.isEmpty || Weight.text!.isEmpty) {
                 self.SubmitButton.isEnabled = false
             } else {
-                if (!initiationPhone.isEmpty) {
+                if (!initiationPhone.isEmpty || e4.E4Connected) {
                     if (initiationPhone["subjectID"] == StudyID.text!) {
                         self.SubmitButton.isEnabled = true
                     } else {
@@ -141,9 +158,11 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    
+    // Submits data and starts session
     @IBAction func submitData(_ sender: Any) {
         submitActivityIndicator.startAnimating()
-        if (self.restorationIdentifier != "faceCamStart") {
+        if (self.restorationIdentifier == "faceCamStart") {
             let failed = directoryModel.startFaceSession(subjectID: StudyID.text!)
             if failed != nil {
                 print(failed!.error)
@@ -183,6 +202,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Navigates to next view controller
     func startExperiment() {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: directoryModel.phoneMode!)
         DispatchQueue.main.async {
@@ -190,6 +210,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Ensures that both phones have submitted before moving forward (starting experiment)
     func handleExperimentStart() {
         if (!initiationPhone.isEmpty) {
             connectivityManager.send(message: ["action": START_EXP])
@@ -200,6 +221,7 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Stores information that other phone has already submitted and is ready to start the experiment
     func handleExperimentInitiation(subjectID: String) {
         self.initiationPhone = ["subjectID": subjectID]
 
@@ -213,9 +235,19 @@ class StartStudyViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+    
+    // Go to home scren
+    func goHome() {
+        DispatchQueue.main.async {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+            self.show(controller!, sender: self)
+        }
+    }
 }
 
 extension StartStudyViewController: ConnectivityManagerDelegate {
+    
+    // Parsing message recieved from other phone
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
         case INITIATE_EXP:
@@ -223,6 +255,8 @@ extension StartStudyViewController: ConnectivityManagerDelegate {
         case START_EXP:
             startExperiment()
             print("StartStudyViewController: Starting experiment")
+        case GO_HOME:
+            goHome()
         default:
             print("StartStudyViewController: unable to parse message")
         }

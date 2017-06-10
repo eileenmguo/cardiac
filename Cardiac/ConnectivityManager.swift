@@ -88,13 +88,6 @@ extension ConnectivityManager : MCNearbyServiceBrowserDelegate {
         NSLog("%@", "foundPeer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
         browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
-//
-//        if (info!["phoneMode"] != directoryModel.phoneMode && info!["subjectID"] == directoryModel.subjectData["subjectID"] as? String) {
-//            print("inviting peer")
-//            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
-//        } else {
-//            print("peer not matching")
-//        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

@@ -11,9 +11,12 @@ import UIKit
 
 
 class ConnectViewController: UIViewController {
+    
+    // Accessing singleton Classes
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     
+    // Available Actions
     let FINISHED_CONNECTING = "finishedConnecting"
     
     @IBOutlet weak var phoneModeLabel: UILabel!
@@ -34,6 +37,7 @@ class ConnectViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // Navigate to normal app home screen
     func startApp() {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
         DispatchQueue.main.async {
@@ -49,6 +53,8 @@ class ConnectViewController: UIViewController {
 
 
 extension ConnectViewController : ConnectivityManagerDelegate {
+    
+    // Parsing message recieved from other phone
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
         case FINISHED_CONNECTING:

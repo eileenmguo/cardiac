@@ -11,20 +11,21 @@ import AVFoundation
 
 class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
+    // Accessing singleton classes
     let directoryModel = DirectoryModel.sharedInstance
     let connectivityManager = ConnectivityManager.sharedInstance
     let bioHarness = BioHarness.sharedInstance
     let e4 = E4Controller.sharedInstance
     
+    // Available Actions for this view controller to send to paired iPhone
     let START_VID = "startVideo"
     let STOP_VID = "stopVideo"
     let SUBMIT_VID = "submitVideo"
-    let RESET_RND = "resetRound"
+    let GO_HOME = "goToHomeScreen"
 
+    // UI elements in the upper right corner
     @IBOutlet weak var xIcon: UIImageView!
-    
     @IBOutlet var BHStatus: [UILabel]!
-    
     
     let WHITE_BALANCE_TEMP: Float = 4000.0
     let WHITE_BALANCE_TINT: Float = 0.0
@@ -63,11 +64,23 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         
         updateButtons(isRecording: false)
         
+        // Updating label that shows the current position
         self.positionLabel.text = directoryModel.POSITIONS[directoryModel.trialList.count]
         connectivityManager.delegate = self
         bioHarness.delegate = self
         e4.delegate = self
         
+        if (self.restorationIdentifier == "faceCam") {
+            if e4.E4Connected {
+                DispatchQueue.main.async {
+                    self.xIcon.alpha = 0.0
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.xIcon.alpha = 1.0
+                }
+            }
+        }
         
         setupCameraSession()
     }
@@ -78,13 +91,12 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         updateButtons(isRecording: false)
         
         view.layer.addSublayer(previewLayer)
-//        bioHarness.connect()
-
-        
         cameraSession.startRunning()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Turning torch off before moving to new view controller
         let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
         if (device.torchMode == AVCaptureTorchMode.on) {
             do {
@@ -137,6 +149,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
             // Set camera to highest available framerate
             configureCameraForHighestFrameRate(device: videoCaptureDevice)
             
+            
+            // Setting torch strength
             if directoryModel.subjectData["phoneMode"] as! String == directoryModel.BODY {
                 configureTorch(device: videoCaptureDevice, torchLevel: 0.1)
             }
@@ -311,8 +325,12 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     
     func updateButtons(isRecording: Bool) {
         // Update button appearances
-        self.recordButton.isEnabled = !isRecording
-        self.stopButton.isEnabled = isRecording
+        if (self.restorationIdentifier == "faceCam") {
+            DispatchQueue.main.async {
+                self.recordButton.isEnabled = !isRecording
+                self.stopButton.isEnabled = isRecording
+            }
+        }
     }
     
     // MARK: - Connectivity Manager Action Functions
@@ -338,6 +356,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
     }
     
     func submit() {
+        
+        // Turning of torch
         let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) as AVCaptureDevice
         if (device.torchMode == AVCaptureTorchMode.on) {
             do {
@@ -348,8 +368,8 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
                 print(error)
             }
         }
-//        bioHarness.disconnect()
-        
+
+        // Moving to next view controller
         DispatchQueue.main.async {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: self.directoryModel.phoneMode! + "Submit")
             self.show(controller!, sender: self)
@@ -373,9 +393,23 @@ class VideoViewController: UIViewController, AVCaptureFileOutputRecordingDelegat
         }
     }
     
+    @IBAction func onClickHome(_ sender: Any) {
+        connectivityManager.send(message: ["action": GO_HOME])
+        goHome()
+    }
+    
+    func goHome() {
+        DispatchQueue.main.async {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "home")
+            self.show(controller!, sender: self)
+        }
+    }
+    
 }
 
 extension VideoViewController: ConnectivityManagerDelegate {
+    
+    // Parsing action message recieved from other phone
     func didReceive(message: [String:Any]) {
         switch message["action"] as! String {
         case START_VID:
@@ -387,9 +421,8 @@ extension VideoViewController: ConnectivityManagerDelegate {
         case SUBMIT_VID:
             submit()
             print("VideoViewController: Submitting video")
-        case RESET_RND:
-            print("VideoViewController: Resetting Round")
-        //reset round
+        case GO_HOME:
+            goHome()
         default:
             print("VideoViewController: Unable to parse received message")
         }
@@ -404,6 +437,8 @@ extension VideoViewController: BHDelegate, E4ControllerDelegate {
     func showAlert(alert: UIAlertController) {
         self.present(alert, animated: true, completion: nil)
     }
+    
+    // Updating the UI elements showing BioHarness status
     func updateStatusCodes(codes: Dictionary<String, Any>) {
         var enableRecord = true
         for label in BHStatus {
@@ -439,11 +474,18 @@ extension VideoViewController: BHDelegate, E4ControllerDelegate {
                 print("VideoViewController: Unable to parse Bio Harness Status code")
             }
         }
-        recordButton.isEnabled = enableRecord
+        
+        if (self.restorationIdentifier == "faceCam") {
+            DispatchQueue.main.async {
+                self.recordButton.isEnabled = enableRecord
+            }
+        }
         DispatchQueue.main.async {
             self.xIcon.alpha = 0.0
         }
     }
+    
+    // Updating connection status to device
     func updateIcon(connected: Bool) {
         if (connected) {
             DispatchQueue.main.async {

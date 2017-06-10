@@ -18,27 +18,37 @@ class DirectoryModel {
     
     static let sharedInstance = DirectoryModel()
     
+    // documents/
     let documentsURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    // documents/cardiacData/
     var rootDirectoryURL: URL
+    // EX: documents/cardiacData/555faceCam
     var subjectDirectoryURL: URL?
     
     var phoneMode: String?
     var subjectData = [String: Any]()
     var trialList = [[String: Any]]()
     
-    var trialStartTime: Double?
-    var trialEndTime: Double?
+    // Times will be updated if video is recorded
+    var trialStartTime = NSDate().timeIntervalSince1970
+    var trialEndTime = NSDate().timeIntervalSince1970
+
     
     var videoFilePath: URL?
     var E4FilePath: URL?
     var BHFilePath: URL?
     var BHCsvText: String = "heartRate,heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
     var E4CsvText: String = "timestamp,type,value\n"
+    var metaDataFilePath: URL?
     
     
     init() {
         self.rootDirectoryURL = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
+        self.E4FilePath = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
+        self.BHFilePath = URL.init(fileURLWithPath: "cardiacData", relativeTo: documentsURL)
         print(rootDirectoryURL.path)
+        
+        // Creating cardiacData directory if it doesn't already exist
         do {
             // Get the directory contents urls (including subfolders urls)
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil, options: [])
@@ -59,7 +69,7 @@ class DirectoryModel {
         return createSubjectDirectory(directoryName: String(describing: subjectData["subjectID"]!) + String(describing:subjectData["phoneMode"]!), overwriteExistingSession: overwrite)
     }
     
-    //Starts when subjectID is submitted
+    // Starts when subjectID is submitted
     func startFaceSession(subjectID: String, overwriteExistingSession overwrite: Bool = false) ->
         (success: Bool, error: String)? {
         self.phoneMode = FACE
@@ -68,13 +78,11 @@ class DirectoryModel {
         return createSubjectDirectory(directoryName: String(describing: subjectData["subjectID"]!) + String(describing: subjectData["phoneMode"]!), overwriteExistingSession: overwrite)
     }
     
-    //Creates subject's root directory (can overwrite previously created directories)
+    // Creates subject's root directory or uses exisiting one
     func createSubjectDirectory(directoryName: String, overwriteExistingSession overwrite: Bool = false)
         -> (success: Bool, error: String)? {
             print("rootDirectoryURL" + rootDirectoryURL.path)
-//            let newURL = URL.init(fileURLWithPath: directoryName, relativeTo: rootDirectoryURL)
             let newURL = URL.init(fileURLWithPath: "cardiacData/" + directoryName, relativeTo: documentsURL)
-//            print("newURL" + newURL.path)
             let subjectAlreadyExists = FileManager.default.fileExists(atPath: newURL.path)
             createDirectory: do {
                 if subjectAlreadyExists {
@@ -86,13 +94,16 @@ class DirectoryModel {
                     }
                 }
                 try FileManager.default.createDirectory(at: newURL, withIntermediateDirectories: false, attributes: nil)
-//                self.subDirNum += 1
             } catch let error as NSError {
                 print(error.localizedDescription)
                 return (false, "Error creating/deleting directory")
             }
             
+            
+            // Generating FilePaths
             self.subjectDirectoryURL = URL.init(fileURLWithPath: newURL.path)
+            self.videoFilePath = URL.init(fileURLWithPath: newURL.path)
+            generateMetaDataFileURL()
             return nil
     }
     
@@ -100,45 +111,60 @@ class DirectoryModel {
     func saveFaceTrailRound() {
         self.saveE4File()
         let tempDictionary = [
-            "startTime": trialStartTime!,
-            "endTime": trialEndTime!,
+            "startTime": trialStartTime,
+            "endTime": trialEndTime,
             "positionType": POSITIONS[trialList.count],
             "faceCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
             "E4FilePath": E4FilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
         ] as [String : Any]
         self.trialList.append(tempDictionary)
+        saveMetaData()
     }
     
     func saveBodyTrialRound(manualEntryData manualData: [String:Any]) {
         self.saveBHfile()
         let tempDictionary = [
-            "startTime": trialStartTime!,
-            "endTime": trialEndTime!,
+            "startTime": trialStartTime,
+            "endTime": trialEndTime,
             "positionType": POSITIONS[trialList.count],
             "bodyCamFilePath": videoFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
             "BHFilePath": BHFilePath!.absoluteString.replacingOccurrences(of: subjectDirectoryURL!.absoluteString, with: ""),
             "manualEntry": manualData
         ] as [String : Any]
         self.trialList.append(tempDictionary)
+        saveMetaData()
     }
     
     
-    //Saving Subject's MetadataFile
+    // Saving Subject's MetadataFile and clears directoryModel Data for new subject
     func finishSubjectSession() {
+        saveMetaData()
+        resetModel()
+    }
+    
+    func saveMetaData() {
         subjectData["trailList"] = trialList
-        let fileName = String(describing: subjectData["subjectID"]!) + phoneMode! + "MetaData.json"
-        let filePath = URL.init(fileURLWithPath: fileName, relativeTo: subjectDirectoryURL)
-//        let filePath = URL.init(fileURLWithPath: "metaData.json", relativeTo: subjectDirectoryURL)
         do {
             let json = try JSONSerialization.data(withJSONObject: subjectData, options: [JSONSerialization.WritingOptions.prettyPrinted])
-            FileManager.default.createFile(atPath: filePath.path, contents: json, attributes: nil)
-            
-            resetModel()
+            FileManager.default.createFile(atPath: self.metaDataFilePath!.path, contents: json, attributes: nil)
         } catch let error as NSError {
             print(error.localizedDescription)
         }
     }
     
+    // Generates the metaData file path based on existing/nonexisting metaData files
+    func generateMetaDataFileURL() {
+        let fileName = String(describing: subjectData["subjectID"]!) + phoneMode! + "MetaData"
+        var version = 0
+        // incremements for number of metaData Files
+        // EX: 555faceCamMetaData1, 555faceCamMetaData2, etc...
+        repeat {
+            version += 1
+            self.metaDataFilePath = URL.init(fileURLWithPath: fileName + String(version) + ".json", relativeTo: subjectDirectoryURL)
+        } while FileManager.default.fileExists(atPath: self.metaDataFilePath!.path)
+    }
+    
+    // Generates videoFileURL to send to VideoViewController
     func generateVideoFileURL() -> (URL){
         let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + String(describing: subjectData["phoneMode"]!)
         var version = 0
@@ -149,6 +175,7 @@ class DirectoryModel {
         return videoFilePath!
     }
     
+    // Saves data from BH to csv file
     func saveBHfile() {
         let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + "BH"
         var version = 0
@@ -162,9 +189,12 @@ class DirectoryModel {
             print("Failed to create BH csv file")
             print("\(error)")
         }
+        
+        // Resetting the column names
         self.BHCsvText = "heartRate,heartRateConfidence,breathingRate,breathingRateConfidence,heartRateVariability,activityLevel,batteryLevel,timestamp\n"
     }
     
+    // saves E4 data to csv file
     func saveE4File() {
         let filePath = String(describing: subjectData["subjectID"]!) + POSITIONS[trialList.count] + "E4"
         var version = 0
@@ -178,6 +208,8 @@ class DirectoryModel {
             print("Failed to create E4 csv file")
             print("\(error)")
         }
+        
+        // Resetting to column names
         self.E4CsvText = "timestamp,type,value\n"
     }
     
@@ -193,6 +225,7 @@ class DirectoryModel {
         self.videoFilePath = nil
         self.E4FilePath = nil
         self.subjectDirectoryURL = nil
+        self.metaDataFilePath = nil
         self.subjectData = [String: Any]()
         self.trialList = [[String: Any]]()
     }
